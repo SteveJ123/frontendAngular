@@ -1,0 +1,1431 @@
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  signal,
+  ViewChild,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { HttpClient } from "@angular/common/http";
+import { Service } from "../../../services/service";
+import { map, Observable, tap, shareReplay, firstValueFrom } from "rxjs";
+import { apiUrl } from "../../../core/constants/api";
+import { AuthService } from "../../../services/AuthService";
+import { ActivatedRoute } from "@angular/router";
+import { ToastService } from "../../../services/toast.service";
+import { Router } from "@angular/router";
+import "emoji-picker-element"; // Import the web component side-effects
+
+interface LeaderboardUser {
+  rank: number;
+  name: string;
+  points: string;
+  avatarBg?: string;
+}
+
+interface Session {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  instructor: string;
+  image: string;
+}
+
+interface TagItem {
+  id: string;
+  name: string;
+  selected: boolean;
+}
+
+interface Membership {
+  id: number;
+  name: string;
+  selected: boolean;
+}
+
+interface SelectedMedia {
+  file: File;
+  type: "image" | "video" | "audio";
+  previewUrl: string;
+}
+
+interface Comment {
+  id: number;
+  username: string;
+  avatar: string;
+  content: string;
+  createdAt: string;
+  isCreator?: boolean;
+}
+
+// interface Post {
+//   id: number;
+//   content: string;
+//   createdAt: string;
+//   mediaFiles?: any[];
+//   showComments?: boolean; // Toggles comment section
+//   comments?: Comment[];
+//   newCommentText?: string;
+// }
+
+// interface Post {
+//   _id: string;
+//   content: string;
+//   comments?: any[];
+//   showComments?: boolean;
+//   newCommentText?: string;
+//   replyingToId?: string | null; // Tracks comment ID being replied to
+// }
+
+// interface Post {
+//   _id: string;
+//   content: string;
+//   comments: Comment[];
+//   showComments: boolean;
+//   newCommentText: string;
+//   replyingToId: string | null;
+//   loadingComments?: boolean; // Add this line
+// }
+
+@Component({
+  selector: "app-create-user-post",
+  imports: [CommonModule, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], //
+  templateUrl: "./create-user-post.html",
+  styleUrl: "./create-user-post.css",
+  host: {
+    class: "w-full block px-4",
+  },
+})
+export class CreateUserPost {
+  // isSidebarOpen = signal(false);
+  private apiUrl = apiUrl;
+
+  // Public getter for template access
+  mediaApiUrl: any = "";
+  // get mediaApiUrl(): string {
+  //   return this.apiUrl.endsWith('/') ? this.apiUrl.slice(0, -1) : this.apiUrl;
+  // }
+  private toastService = inject(ToastService);
+  upcomingSessions: Session[] = [
+    {
+      id: "1",
+      title: "Morning Sveyog Yoga",
+      date: "24 Aug",
+      time: "02:30 AM - 03:50 AM",
+      instructor: "Ageless Lifestyle Hub",
+      image:
+        "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&q=80&w=200",
+    },
+    {
+      id: "2",
+      title: "The Glow-Up Hour",
+      date: "24 Aug",
+      time: "07:00 PM - 08:00 PM",
+      instructor: "Ageless Lifestyle Hub",
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200",
+    },
+  ];
+
+  leaderboard: LeaderboardUser[] = [
+    { rank: 1, name: "Uma Maheswari Amarnath", points: "51.98K ALHP" },
+    { rank: 2, name: "Sushma William", points: "48.57K ALHP" },
+    { rank: 3, name: "malathi", points: "44.27K ALHP" },
+    { rank: 4, name: "Legala Manjula", points: "39.79K ALHP" },
+    { rank: 5, name: "Baljit", points: "38.10K ALHP" },
+  ];
+
+  // toggleSidebar() {
+  //   this.isSidebarOpen.update((v) => !v);
+  // }
+  isOpen = signal(false);
+  loading: boolean = false;
+  posts: any = [];
+  errorMessage!: string;
+
+  title: string = "";
+
+  targetPostId: any | null = null;
+
+  editingPostId: any | null = null;
+  editContent: string = "";
+
+  // Track existing files marked for removal during edit
+  removedMediaIds: string[] = [];
+
+  // Track new media files added during edit
+  newEditFiles: { file: File; previewUrl: string; type: string }[] = [];
+
+  openModal() {
+    this.isOpen.set(true);
+    document.body.style.overflow = "hidden"; // Prevents background body scrolling
+  }
+
+  closeModal() {
+    this.isOpen.set(false);
+    document.body.style.overflow = "auto"; // Re-enables background body scrolling
+  }
+
+  isTagModalOpen = signal(false);
+
+  // Default available tags list
+  allTags: TagItem[] = [
+    { id: "1", name: "Welcome Message", selected: false },
+    { id: "2", name: "Upcoming Events", selected: false },
+    { id: "3", name: "Announcements", selected: false },
+    { id: "4", name: "Events", selected: false },
+    { id: "5", name: "Polls", selected: false },
+    { id: "6", name: "Success Stories", selected: false },
+    { id: "7", name: "Elite Club Exclusive", selected: false },
+    { id: "8", name: "journey", selected: false },
+    { id: "9", name: "Challenge", selected: false },
+    { id: "10", name: "Sveyog Yoga-Body Flow", selected: false },
+    { id: "11", name: "Festival Celebrations", selected: false },
+    { id: "12", name: "Diamond Success", selected: false },
+  ];
+
+  // Temporary tags array for staging selections inside modal
+  tempTags: TagItem[] = [];
+
+  // Saved confirmed tags shown on the main page
+  savedTags = signal<TagItem[]>([]);
+  postContent: string = "";
+  posts$!: Observable<any[]>;
+  cachedPosts: any[] = [];
+  // Track viewed posts during the session to avoid duplicate API calls
+  productToDeleteId: string = "";
+  showDeleteModal: boolean = false;
+  showPostContentError: boolean = false;
+  constructor() {
+    // private http: HttpClient,
+    // private service: Service,
+    // private cd: ChangeDetectorRef,
+  }
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+  private service = inject(Service);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
+  username: any = this.authService.getUserName();
+  commentUsername = this.authService.getUserName();
+  userId: any = "";
+
+  profileImage = localStorage.getItem("profileImage");
+  viewedPostIds: any = new Set<string>();
+  get currentRouteLanguage(): string {
+    const urlSegments = this.router.url.split("/").filter(Boolean); // e.g. ['te', 'user-feed']
+    const firstSegment = urlSegments[0]; // 'te' or 'en'
+
+    return firstSegment === "te" ? "te" : "en";
+  }
+  userProfileImage: any = "";
+  userLanguage: any = "";
+  userType: any = "";
+  targetCommentId: any = "";
+  selectedFile: any = "";
+  ngOnInit(): void {
+    // this.getPosts();
+    // 1. Capture target postId from query parameters
+    this.userId = Number(this.authService.getUserId());
+    this.userLanguage = this.authService.getUserLanguage();
+    this.userProfileImage = localStorage.getItem("profileImage");
+    this.userType = this.authService.getUserRole();
+    this.mediaApiUrl = this.apiUrl.endsWith("/")
+      ? this.apiUrl.slice(0, -1)
+      : this.apiUrl;
+
+    this.getPostsObservable();
+
+    // this.route.queryParams.subscribe((params) => {
+    //   this.targetPostId = params['postId'] || null;
+    //   if (this.targetPostId) {
+    //     console.log('this.cachedPosts', this.cachedPosts);
+    //     if (this.cachedPosts.length > 0) {
+    //       // User is ALREADY on the feed page and data is loaded:
+    //       // Scroll immediately without re-fetching posts
+    //       this.scrollToPost(this.targetPostId);
+    //     }
+    //   }
+    // });
+
+    this.route.queryParams.subscribe((params) => {
+      this.targetPostId = Number(params["postId"]) || null;
+      this.targetCommentId = Number(params["commentId"]) || null;
+
+      if (this.targetPostId && this.posts && this.posts.length > 0) {
+        this.handlePostAndCommentNavigation(
+          Number(this.targetPostId),
+          Number(this.targetCommentId),
+        );
+      }
+    });
+  }
+
+  handlePostAndCommentNavigation(postId: any, commentId: any | null): void {
+    // Locate target post in post array
+    const post = this.posts.find((p: any) => p._id === postId);
+
+    if (post) {
+      // 1. Expand comments section if it isn't already open
+      if (!post.showComments) {
+        this.toggleComments(post); // Opens comments section & loads comments from backend
+      }
+
+      // 2. Scroll and highlight target element
+      setTimeout(() => {
+        if (commentId) {
+          // Attempt to scroll to specific comment element
+          const commentElement = document.getElementById(
+            `comment-${commentId}`,
+          );
+          console.log("commentElement", commentElement);
+          if (commentElement) {
+            commentElement.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+            this.highlightElement(commentElement);
+            return;
+          }
+        }
+
+        // Fallback: Scroll to post container
+        this.scrollToPost(postId);
+      }, 500); // 500ms timeout ensures DOM renders comments section
+    }
+  }
+
+  scrollToPost(postId: string): void {
+    const postElement = document.getElementById(`post-${postId}`);
+    if (postElement) {
+      postElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      this.highlightElement(postElement);
+    }
+  }
+
+  highlightElement(element: HTMLElement): void {
+    element.classList.add(
+      "ring-2",
+      "ring-blue-500",
+      "transition-all",
+      "duration-500",
+    );
+    setTimeout(() => {
+      element.classList.remove("ring-2", "ring-blue-500");
+    }, 3000);
+  }
+
+  // Ensure this triggers whenever posts are fetched/updated from backend API
+  onPostsLoaded(postsData: any[]): void {
+    this.posts = postsData;
+    if (this.targetPostId) {
+      this.handlePostAndCommentNavigation(
+        this.targetPostId,
+        this.targetCommentId,
+      );
+    }
+  }
+
+  // getPostsObservable() {
+  //   // this.posts$ = this.service.getPosts().pipe(map((response) => response.data));
+  //   const activeLanguage = this.currentRouteLanguage;
+  //   this.posts$ = this.service.getPosts(activeLanguage).pipe(
+  //     map((response) => response.data || []),
+  //     tap((posts: any[]) => {
+  //       // Automatically track a view for each loaded post once per session
+  //       // Cache posts in component state
+  //       this.cachedPosts = posts;
+  //       console.log('posts', posts);
+  //       posts.forEach((post) => {
+  //         if (post._id && !this.viewedPostIds.has(post._id)) {
+  //           this.trackPostView(post);
+  //         }
+  //       });
+  //       // 2. Trigger auto-scrolling if a targetPostId parameter exists
+  //       if (this.targetPostId) {
+  //         setTimeout(() => {
+  //           this.scrollToPost(this.targetPostId!);
+  //         }, 300);
+  //       }
+  //     }),
+  //     shareReplay(1),
+  //   );
+  // }
+
+  // scrollToPost(postId: string): void {
+  //   const element = document.getElementById('post-' + postId);
+
+  //   if (element) {
+  //     // Smooth scroll to the post element
+  //     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  //     // Highlight post briefly to draw user attention
+  //     element.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50/30');
+  //     setTimeout(() => {
+  //       element.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/30');
+  //     }, 2500);
+  //   }
+  // }
+
+  getPostsObservable() {
+    // this.posts$ = this.service.getPosts().pipe(map((response) => response.data));
+    // Pass the route language to fetch matching posts
+    // const activeLanguage = this.currentRouteLanguage;
+    // this.posts$ = this.service.getPosts(activeLanguage).pipe(
+    //   map((response) => response.data || []),
+    //   tap((posts: any[]) => {
+    // Automatically track a view for each loaded post once per session
+    // Cache posts in component state
+    // this.cachedPosts = posts;
+    // console.log('posts', posts);
+    // Handle deep-linking navigation AFTER posts are loaded in DOM
+
+    // posts.forEach((post) => {
+    //   if (post._id && !this.viewedPostIds.has(post._id)) {
+    //     this.trackPostView(post);
+    //   }
+    // });
+    // 2. Trigger auto-scrolling if a targetPostId parameter exists
+    //     if (this.targetPostId) {
+    //       setTimeout(() => {
+    //         this.scrollToPost(this.targetPostId!);
+    //       }, 300);
+    //     }
+    //   }),
+    //   shareReplay(1),
+    // );
+
+    const activeLanguage = this.currentRouteLanguage;
+
+    this.service.getPosts(activeLanguage).subscribe({
+      next: (response) => {
+        console.log("posts response:", response);
+
+        // 1. Assign posts array
+
+        this.posts = response.data || [];
+        this.cachedPosts = this.posts;
+
+        // 2. Automatically track views once per post per session
+        this.posts.forEach((post: any) => {
+          if (post._id && !this.viewedPostIds.has(post._id)) {
+            this.trackPostView(post);
+          }
+        });
+
+        // 3. Force change detection so Angular renders *ngFor before DOM operations
+        this.cd.detectChanges();
+
+        // 4. Trigger deep-link navigation (scrolling to post/comment)
+
+        if (this.targetPostId) {
+          this.handlePostAndCommentNavigation(
+            Number(this.targetPostId),
+            Number(this.targetCommentId),
+          );
+        }
+      },
+      error: (err) => {
+        console.error("Failed to load posts:", err);
+      },
+    });
+  }
+
+  trackPostView(post: any): void {
+    // Record view in memory immediately to avoid duplicates
+    this.viewedPostIds.add(post._id);
+
+    this.service.registerView(post._id).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          post.views = res.views;
+        }
+      },
+      error: (err) => console.error("Error tracking view:", err),
+    });
+  }
+
+  toggleLike(post: any): void {
+    if (!this.userId) return;
+
+    // Store state snapshot for local rollback on failure
+    const previousLikes = [...(post.likes || [])];
+    const previousLikeCount = post.likeCount ?? post.likes?.length ?? 0;
+
+    const isCurrentlyLiked = this.isPostLikedByCurrentUser(post);
+
+    // Optimistic UI Update directly on the post object
+    if (isCurrentlyLiked) {
+      post.likes = post.likes.filter((id: string) => id !== this.userId);
+      post.likeCount = Math.max(0, previousLikeCount - 1);
+    } else {
+      post.likes = [...(post.likes || []), this.userId];
+      post.likeCount = previousLikeCount + 1;
+    }
+
+    // Sync with backend without reloading the entire posts$ stream
+    this.service.toggleLike(post._id, this.userId).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          post.likeCount = res.likeCount;
+          post.likes = res.likes;
+        }
+      },
+      error: (err) => {
+        console.error("Failed to toggle like:", err);
+        // Instant local rollback
+        post.likes = previousLikes;
+        post.likeCount = previousLikeCount;
+      },
+    });
+  }
+
+  isPostLikedByCurrentUser(post: any): boolean {
+    if (!post?.likes || !this.userId) return false;
+    return post.likes.includes(this.userId);
+  }
+
+  // getPosts(): void {
+  //   this.loading = true;
+
+  //   this.service.getPosts().subscribe({
+  //     next: (response) => {
+  //       console.log('API Response:', response);
+
+  //       this.posts = response.data;
+
+  //       this.loading = false;
+  //     },
+
+  //     error: (error) => {
+  //       console.error('Error fetching posts:', error);
+
+  //       this.errorMessage = 'Unable to load posts';
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
+
+  openTagModal() {
+    // Clone state so changes aren't finalized until "Save changes" is clicked
+    this.tempTags = this.allTags.map((tag) => ({ ...tag }));
+    this.isTagModalOpen.set(true);
+    document.body.style.overflow = "hidden";
+  }
+
+  closeTagModal() {
+    this.isTagModalOpen.set(false);
+    document.body.style.overflow = "auto";
+  }
+
+  toggleTag(tag: TagItem) {
+    tag.selected = !tag.selected;
+  }
+
+  isAllSelected(): boolean {
+    return this.tempTags.length > 0 && this.tempTags.every((t) => t.selected);
+  }
+
+  toggleSelectAll(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.tempTags.forEach((t) => (t.selected = isChecked));
+  }
+
+  saveChanges() {
+    // Commit temporary state back to primary tags array
+    this.allTags = this.tempTags.map((tag) => ({ ...tag }));
+    this.savedTags.set(this.allTags.filter((t) => t.selected));
+    this.closeTagModal();
+  }
+
+  removeTag(tagToRemove: TagItem) {
+    const found = this.allTags.find((t) => t.id === tagToRemove.id);
+    if (found) found.selected = false;
+    this.savedTags.set(this.allTags.filter((t) => t.selected));
+  }
+
+  // Modal visibility signal
+  isMembershipModalOpen = signal(false);
+
+  searchQuery = "";
+
+  // Temporary state inside the modal
+  tempMemberships: Membership[] = [
+    {
+      id: 1,
+      name: "Face YogaSutra Practitioner Certificate Program",
+      selected: false,
+    },
+    { id: 2, name: "Elite Club Membership", selected: false },
+  ];
+
+  // Saved selection state
+  savedMemberships = signal<Membership[]>([]);
+
+  openMembershipModal(): void {
+    // Sync current saved selection state into temp modal state
+    const savedIds = new Set(this.savedMemberships().map((m) => m.id));
+    this.tempMemberships = this.tempMemberships.map((m) => ({
+      ...m,
+      selected: savedIds.has(m.id),
+    }));
+    this.isMembershipModalOpen.set(true);
+  }
+
+  closeMembershipModal(): void {
+    this.isMembershipModalOpen.set(false);
+  }
+
+  toggleMembership(item: Membership): void {
+    item.selected = !item.selected;
+  }
+
+  isAllMembershipsSelected(): boolean {
+    return (
+      this.tempMemberships.length > 0 &&
+      this.tempMemberships.every((m) => m.selected)
+    );
+  }
+
+  toggleSelectAllMemberships(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.tempMemberships.forEach((m) => (m.selected = isChecked));
+  }
+
+  filteredMemberships(): Membership[] {
+    if (!this.searchQuery.trim()) {
+      return this.tempMemberships;
+    }
+    return this.tempMemberships.filter((m) =>
+      m.name.toLowerCase().includes(this.searchQuery.toLowerCase()),
+    );
+  }
+
+  saveMembershipChanges(): void {
+    this.savedMemberships.set(this.tempMemberships.filter((m) => m.selected));
+    this.closeMembershipModal();
+  }
+
+  selectedFiles: SelectedMedia[] = [];
+  isUploading = false;
+
+  // onFileSelected(event: Event, type: 'image' | 'video' | 'audio'): void {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files[0]) {
+  //     const file = input.files[0];
+  //     const previewUrl = URL.createObjectURL(file);
+
+  //     this.selectedFiles.push({ file, type, previewUrl });
+
+  //     // Reset input value to allow selecting the same file again if needed
+  //     input.value = '';
+  //   }
+  // }
+
+  clearSelectedFiles(): void {
+    this.selectedFiles.forEach((item) => {
+      if (item.previewUrl) {
+        URL.revokeObjectURL(item.previewUrl);
+      }
+    });
+    this.selectedFiles = [];
+    this.selectedFile = null;
+  }
+
+  async onFileSelected(
+    event: Event,
+    type: "image" | "video" | "audio",
+  ): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || !input.files[0]) return;
+
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      // 1. File Size Limits (in bytes)
+      const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+      const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50 MB
+      const MAX_AUDIO_SIZE = 20 * 1024 * 1024; // 20 MB
+
+      // Check size limit by type
+      if (type === "image" && file.size > MAX_IMAGE_SIZE) {
+        alert("Image size must be less than 5 MB.");
+        input.value = "";
+        return;
+      }
+      if (type === "video" && file.size > MAX_VIDEO_SIZE) {
+        alert("Video file size must be less than 50 MB.");
+        input.value = "";
+        return;
+      }
+      if (type === "audio" && file.size > MAX_AUDIO_SIZE) {
+        alert("Audio file size must be less than 20 MB.");
+        input.value = "";
+        return;
+      }
+
+      // 2. Media Duration Checks (Max 2 Minutes = 120 Seconds)
+      const MAX_DURATION_SECONDS = 120;
+
+      if (type === "video" || type === "audio") {
+        try {
+          const duration = await this.getMediaDuration(file, type);
+          if (duration > MAX_DURATION_SECONDS) {
+            alert(
+              `${type === "video" ? "Video" : "Audio"} length cannot exceed 2 minutes.`,
+            );
+            input.value = "";
+            return;
+          }
+        } catch (err) {
+          alert(`Could not load ${type} metadata. Please try another file.`);
+          input.value = "";
+          return;
+        }
+      }
+      // 1. Clear previous selections to enforce single-file limit
+      this.clearSelectedFiles();
+
+      // const file = input.files[0];
+      const previewUrl = URL.createObjectURL(file);
+
+      this.selectedFiles.push({ file, type, previewUrl });
+      this.selectedFile = input.files[0];
+      this.cd.detectChanges();
+
+      // Reset input value to allow selecting the same file again if needed
+      input.value = "";
+    }
+  }
+
+  /**
+   * Helper method to read audio/video element metadata duration dynamically
+   */
+  private getMediaDuration(
+    file: File,
+    type: "video" | "audio",
+  ): Promise<number> {
+    return new Promise((resolve, reject) => {
+      const element = document.createElement(type);
+      element.preload = "metadata";
+      const objectUrl = URL.createObjectURL(file);
+
+      element.onloadedmetadata = () => {
+        URL.revokeObjectURL(objectUrl);
+        resolve(element.duration);
+      };
+
+      element.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject("Failed to load media duration");
+      };
+
+      element.src = objectUrl;
+    });
+  }
+
+  removeFile(index: number): void {
+    URL.revokeObjectURL(this.selectedFiles[index].previewUrl);
+    this.selectedFiles.splice(index, 1);
+  }
+
+  togglePoll(): void {
+    console.log("Poll feature clicked");
+  }
+
+  // publishPost(): void {
+  //   // Reset error state on attempt
+  //   this.showPostContentError = false;
+
+  //   if (!this.postContent.trim()) {
+  //     this.showPostContentError = true;
+  //     return;
+  //   }
+
+  //   this.isUploading = true;
+
+  //   // Build multipart FormData payload
+  //   const formData = new FormData();
+
+  //   // 1. Text Content]
+  //   formData.append('userId', localStorage.getItem('userId') || '');
+  //   formData.append('content', this.postContent);
+  //   formData.append('role', localStorage.getItem('role') || '');
+
+  //   // 2. Selected Tags (sending array of IDs/Names as JSON)
+  //   const tagIds = this.savedTags().map((tag) => tag.id);
+  //   formData.append('tagIds', JSON.stringify(tagIds));
+
+  //   // 3. Selected Memberships
+  //   const membershipIds = this.savedMemberships().map((m) => m.id);
+  //   formData.append('membershipIds', JSON.stringify(membershipIds));
+
+  //   if (this.userType === 'user') {
+  //     formData.append('targetLanguage', this.userLanguage); // Pass current URL language
+  //   } else {
+  //     formData.append('targetLanguage', this.currentRouteLanguage === 'te' ? 'Telugu' : 'English'); // Pass current URL language
+  //   }
+  //   // 4. File attachments
+  //   this.selectedFiles.forEach((item, index) => {
+  //     formData.append(`files`, item.file, item.file.name);
+  //     formData.append(`fileTypes`, item.type);
+  //   });
+  //   // console.log('formdata', formData);
+  //   for (const [key, value] of formData.entries()) {
+  //     console.log(`${key}:`, value);
+  //   }
+
+  //   // Send payload to backend API endpoint
+  //   this.service.posts(formData).subscribe({
+  //     next: (response: any) => {
+  //       this.isUploading = false;
+  //       this.selectedFiles = []; // Clear attachments after success
+  //       this.resetForm();
+  //       this.getPostsObservable();
+  //       this.closeModal();
+  //       this.toastService.success('Post Created Successfully');
+  //     },
+  //     error: (error: any) => {
+  //       console.error('Upload failed:', error);
+  //       this.isUploading = false;
+  //       this.toastService.error('Post Not Created Successfully');
+  //     },
+  //   });
+  // }
+
+  async publishPost(): Promise<void> {
+    // 1. Reset error state
+    this.showPostContentError = false;
+
+    if (!this.postContent.trim()) {
+      this.showPostContentError = true;
+      return;
+    }
+
+    const file: any = this.selectedFile;
+    // if (!file) {
+    //   alert('Please select a file');
+    //   return;
+    // }
+
+    this.isUploading = true;
+
+    try {
+      const startTime = new Date();
+
+      // 2. Upload file to AWS S3
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+
+      const uploadRes: any = await firstValueFrom(
+        this.service.uploadAWSMedia(uploadFormData),
+      );
+
+      if (!uploadRes || !uploadRes.success) {
+        throw new Error("Error uploading media file to AWS");
+      }
+
+      const fileLink = uploadRes.data;
+      const endTime = new Date();
+      console.log("File uploaded to S3:", fileLink);
+      console.log(
+        "Upload time:",
+        (endTime.getTime() - startTime.getTime()) / 1000,
+        "seconds",
+      );
+
+      // Target Language Selection
+      const targetLanguage = this.currentRouteLanguage;
+
+      const tagIds = this.savedTags().map((tag) => tag.id);
+      const membershipIds = this.savedMemberships().map((m) => m.id);
+      // 3. Construct Post Payload with the S3 fileLink
+      const postData = {
+        userId: localStorage.getItem("userId") || "",
+        content: this.postContent,
+        role: localStorage.getItem("role") || "",
+        fileLink: fileLink,
+        tagIds: JSON.stringify(tagIds),
+        membershipIds: JSON.stringify(membershipIds),
+        targetLanguage: targetLanguage,
+      };
+
+      // 4. Submit Post Data to Backend API
+      const postResponse: any = await firstValueFrom(
+        this.service.posts(postData),
+      );
+
+      // 5. Success UI Cleanup
+      this.selectedFiles = [];
+      this.resetForm();
+      this.getPostsObservable();
+      this.closeModal();
+      this.toastService.success("Post Created Successfully");
+    } catch (error: any) {
+      console.error("Publishing failed:", error);
+      this.toastService.error("Post Not Created Successfully");
+    } finally {
+      this.isUploading = false;
+    }
+  }
+
+  // Reset form after successful submission
+  resetForm(): void {
+    this.postContent = "";
+    this.savedTags.set([]);
+    this.savedMemberships.set([]);
+    this.selectedFiles.forEach((f) => URL.revokeObjectURL(f.previewUrl));
+    this.selectedFiles = [];
+  }
+
+  getMediaUrl(path: string): string {
+    if (!path) {
+      return "";
+    }
+
+    // Convert Windows \ to /
+    const normalizedPath = path.replace(/\\/g, "/");
+
+    return `${apiUrl}${normalizedPath}`;
+    // return `https://backend-2rgv.onrender.com/${normalizedPath}`;
+  }
+
+  getPostAge(createdAt: string): string {
+    if (!createdAt) {
+      return "";
+    }
+
+    const created = new Date(createdAt);
+
+    const now = new Date();
+
+    const difference = now.getTime() - created.getTime();
+
+    const minutes = Math.floor(difference / (1000 * 60));
+
+    if (minutes < 60) {
+      return `${minutes}m`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+
+    if (hours < 24) {
+      return `${hours}h`;
+    }
+
+    const days = Math.floor(hours / 24);
+
+    if (days < 30) {
+      return `${days}d`;
+    }
+
+    const months = Math.floor(days / 30);
+
+    return `${months}mo`;
+  }
+
+  getTagName(tagId: string): string {
+    const tag = this.allTags.find((tag) => tag.id === tagId);
+
+    return tag ? tag.name : tagId;
+  }
+
+  @ViewChild("postContentInput")
+  postContentInput!: ElementRef<HTMLTextAreaElement>;
+
+  showEmojiPicker: boolean = false;
+
+  // Categorized emoji collection list
+  emojiList: string[] = [
+    "😀",
+    "😃",
+    "😄",
+    "😁",
+    "😆",
+    "😅",
+    "😂",
+    "🤣",
+    "😊",
+    "😇",
+    "🙂",
+    "🙃",
+    "😉",
+    "😌",
+    "😍",
+    "🥰",
+    "😘",
+    "😗",
+    "😙",
+    "😚",
+    "😋",
+    "😛",
+    "😜",
+    "🤪",
+    "😝",
+    "🤑",
+    "🤗",
+    "🤭",
+    "🤫",
+    "🤔",
+    "🤐",
+    "🤨",
+    "😐",
+    "😑",
+    "😶",
+    "😏",
+    "😒",
+    "🙄",
+    "😬",
+    "🤥",
+    "😌",
+    "😔",
+    "😪",
+    "🤤",
+    "😴",
+    "😷",
+    "🤒",
+    "🤕",
+    "🤢",
+    "🤮",
+    "🤧",
+    "🥵",
+    "🥶",
+    "🥴",
+    "😵",
+    "🤯",
+    "🤠",
+    "🥳",
+    "😎",
+    "🤓",
+    "🧐",
+    "😕",
+    "😟",
+    "🙁",
+    "😮",
+    "😯",
+    "😲",
+    "😳",
+    "🥺",
+    "😦",
+    "👍",
+    "👎",
+    "👏",
+    "🙌",
+    "👐",
+    "🤲",
+    "🤝",
+    "🙏",
+    "✌️",
+    "🤘",
+    "🔥",
+    "✨",
+    "💖",
+    "❤️",
+    "🎉",
+    "🌟",
+    "💯",
+    "🚀",
+    "💡",
+    "💬",
+  ];
+
+  /**
+   * Toggles emoji picker overlay display
+   */
+  toggleEmojiPicker(): void {
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  /**
+   * Appends selected emoji to post text and keeps cursor active
+   */
+  selectEmoji(emoji: string): void {
+    this.postContent += emoji;
+    this.showEmojiPicker = false; // Close popup after selection
+
+    if (this.postContentInput) {
+      this.postContentInput.nativeElement.focus();
+    }
+  }
+
+  /**
+   * Optional: Closes popup when pressing the Escape key
+   */
+  @HostListener("document:keydown.escape")
+  onKeydownHandler(): void {
+    if (this.showEmojiPicker) {
+      this.showEmojiPicker = false;
+    }
+  }
+
+  // Toggle comments section and load comments from backend
+  toggleComments(post: any) {
+    post.showComments = !post.showComments;
+    console.log("post.showComments", post.showComments);
+
+    if (post.showComments && post.allComments) {
+      post.loadingComments = true;
+      this.loadComments(post);
+    }
+  }
+
+  loadComments(post: any) {
+    // this.http.get<any>(`http://localhost:5000/api/comments/post/${post._id}`)
+    this.service.getPostComments(post._id).subscribe({
+      next: (data: any) => {
+        console.log("data comment", data);
+        const comments = data?.comments || [];
+        post.allComments = [...comments];
+        post.loadingComments = false; // Stop loading state
+        this.cd.detectChanges();
+        if (this.targetPostId && this.posts && this.posts.length > 0) {
+          this.handlePostAndCommentNavigation(
+            Number(this.targetPostId),
+            Number(this.targetCommentId),
+          );
+        }
+      },
+      error: (err) => {
+        console.error("Failed to load comments", err);
+        post.loadingComments = false; // Stop loading state on failure
+        this.cd.detectChanges();
+      },
+    });
+  }
+
+  // Prepare component state when user clicks 'Reply' on a specific comment
+  setReplyTo(post: any, parentCommentId: any) {
+    post.replyingToId = parentCommentId;
+  }
+
+  // Submit comment or reply
+  submitComment(post: any) {
+    // if (!post.newCommentText?.trim()) return;
+
+    // const commentPayload = {
+    //   postId: post._id,
+    //   userId: this.userId,
+    //   username: this.commentUsername,
+    //   content: post.newCommentText,
+    //   parentId: post.replyingToId || null,
+    // };
+
+    // this.service.postComments(commentPayload).subscribe({
+    //   next: (newComment: any) => {
+    //     if (!post.comments) post.comments = [];
+    //     // post.comments.push(newComment);
+    //     post.comments = [...post.comments, newComment];
+    //     post.newCommentText = '';
+    //     post.replyingToId = null;
+    //     // post.showComments = !post.showComments;
+    //     this.cd.detectChanges();
+    //   },
+    //   error: (err) => console.error('Failed to submit comment', err),
+    // });
+
+    let text = "";
+    // if (!text) return;
+
+    if (post.replyingToId) {
+      // Logic for adding a nested reply
+      const payload = {
+        postId: post._id,
+        userId: this.userId,
+        username: this.commentUsername,
+        content: post.newReplyCommentText,
+        parentId: post.replyingToId || null,
+      };
+
+      this.service.postComments(payload).subscribe({
+        next: (response: any) => {
+          console.log("response reply", response);
+          // Find parent comment and append reply locally
+          const parentComment = post.allComments.find(
+            (c: any) => c._id === Number(post.replyingToId),
+          );
+          console.log("parentComment", parentComment);
+          if (parentComment) {
+            // parentComment.replies = parentComment.replies || [];
+            if (!parentComment.replies) {
+              parentComment.replies = [];
+            }
+            // parentComment.replies.push(response);
+            parentComment.replies = [
+              ...(parentComment.replies || []),
+              response,
+            ];
+            this.cd.detectChanges();
+          }
+          // Reset reply input state
+          post.replyingToId = null;
+          post.newCommentText = "";
+          this.cd.detectChanges();
+        },
+        error: (err: any) => console.error("Error submitting reply", err),
+      });
+    } else {
+      const commentPayload = {
+        postId: post._id,
+        userId: this.userId,
+        username: this.commentUsername,
+        content: post.newCommentText,
+        parentId: post.replyingToId || null,
+      };
+      // this.http.post('http://localhost:5000/api/comments', commentPayload)
+      this.service.postComments(commentPayload).subscribe({
+        next: (newComment: any) => {
+          if (!post.comments) post.allComments = [];
+          post.allComments.push(newComment);
+          post.newCommentText = "";
+          post.replyingToId = null;
+          // post.showComments = !post.showComments;
+          this.cd.detectChanges();
+        },
+        error: (err) => console.error("Failed to submit comment", err),
+      });
+    }
+  }
+
+  startEditing(post: any): void {
+    this.activeMenuPostId = null;
+    this.editingPostId = Number(post._id);
+    this.editContent = post.content;
+    this.removedMediaIds = [];
+    this.newEditFiles = [];
+  }
+
+  cancelEditing(): void {
+    this.editingPostId = null;
+    this.editContent = "";
+    this.removedMediaIds = [];
+    this.newEditFiles = [];
+  }
+
+  // Remove existing saved media from post
+  markMediaForRemoval(mediaId: string): void {
+    this.removedMediaIds.push(mediaId);
+  }
+
+  // Check if media is marked deleted in edit mode
+  isMediaRemoved(mediaId: string): boolean {
+    return this.removedMediaIds.includes(mediaId);
+  }
+
+  // Handle new media selection in Edit Mode
+  onEditFileSelected(event: any, type: string): void {
+    const file = event.target.files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      this.newEditFiles.push({ file, previewUrl, type });
+    }
+  }
+
+  removeNewEditFile(index: number): void {
+    this.newEditFiles.splice(index, 1);
+  }
+
+  // saveEdit(post: any): void {
+  //   if (!this.userId) {
+  //     console.error('User is not authenticated.');
+  //     return;
+  //   }
+  //   const formData = new FormData();
+  //   formData.append('userId', this.userId);
+  //   formData.append('content', this.editContent);
+
+  //   // Append IDs of files to remove
+  //   this.removedMediaIds.forEach((id) => formData.append('removedMediaIds', id));
+
+  //   // Append new media files to upload
+  //   this.newEditFiles.forEach((item) => formData.append('newFiles', item.file));
+
+  //   this.service.updatePost(post._id, formData).subscribe({
+  //     next: (res: any) => {
+  //       if (res.success) {
+  //         post.content = res.data.content;
+  //         post.mediaFiles = res.data.mediaFiles;
+  //         this.cancelEditing();
+  //         this.cd.detectChanges();
+  //         this.toastService.success('Post Updated Successfully!');
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to update post:', err);
+  //       this.toastService.error('Post Not Updated Successfully!');
+  //     },
+  //   });
+  // }
+
+  async saveEdit(post: any): Promise<void> {
+    if (!this.userId) {
+      console.error("User is not authenticated.");
+      return;
+    }
+
+    this.isUploading = true;
+
+    try {
+      let newFileLink = "";
+
+      // 1. If a new media file was selected, upload it directly to S3 first
+      if (this.newEditFiles && this.newEditFiles.length > 0) {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", this.newEditFiles[0].file);
+
+        const uploadRes: any = await firstValueFrom(
+          this.service.uploadAWSMedia(uploadFormData),
+        );
+
+        if (!uploadRes || !uploadRes.success) {
+          throw new Error("Failed to upload new media file to AWS S3");
+        }
+
+        newFileLink = uploadRes.data;
+      }
+
+      // 2. Prepare JSON Payload for the PUT update request
+      const updatePayload = {
+        userId: this.userId,
+        content: this.editContent,
+        removedMediaIds: this.removedMediaIds, // Array of MongoDB media _ids to delete
+        fileLink: newFileLink, // S3 link for newly added media (if any)
+      };
+
+      // 3. Send update request to Express API
+      const res: any = await firstValueFrom(
+        this.service.updatePost(post._id, updatePayload),
+      );
+
+      if (res.success) {
+        post.content = res.data.content;
+        post.mediaFiles = res.data.mediaFiles;
+        this.cancelEditing();
+        this.cd.detectChanges();
+        this.toastService.success("Post Updated Successfully!");
+      }
+    } catch (err) {
+      console.error("Failed to update post:", err);
+      this.toastService.error("Post Not Updated Successfully!");
+    } finally {
+      this.isUploading = false;
+    }
+  }
+
+  // deletePost(postId: string): void {
+  //   if (confirm('Are you sure you want to delete this post and its attachments?')) {
+  //     this.service.deletePost(postId, this.userId).subscribe({
+  //       next: (res) => {
+  //         if (res.success) {
+  //           window.location.reload();
+  //         }
+  //       },
+  //       error: (err) => console.error('Failed to delete post:', err),
+  //     });
+  //   }
+  // }
+
+  // Opens the custom popup dialog
+  openDeleteModal(id: string): void {
+    this.activeMenuPostId = null;
+    this.productToDeleteId = id;
+    this.showDeleteModal = true;
+  }
+
+  // Closes the popup dialog without deleting
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.productToDeleteId = "";
+  }
+
+  // Executed when "OK" / "Delete" is pressed in the modal
+  confirmDelete(): void {
+    if (!this.productToDeleteId) return;
+    this.service.deletePost(this.productToDeleteId, this.userId).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.getPostsObservable();
+          this.toastService.success("Post deleted successfully!");
+          this.cancelDelete();
+          this.cd.detectChanges();
+        }
+      },
+      error: (err) => {
+        (console.error("Error deleting product:", err), this.cancelDelete());
+        this.cancelDelete();
+        this.cd.detectChanges();
+        this.toastService.error("Post not deleted!");
+      },
+    });
+  }
+
+  activeMenuPostId: string | null = null;
+
+  toggleMenu(postId: string, event: Event): void {
+    event.stopPropagation(); // Prevents HostListener from immediately closing the menu
+    this.activeMenuPostId = this.activeMenuPostId === postId ? null : postId;
+  }
+
+  messageText = "";
+  messageCommentText = "";
+  showPicker = false;
+  showCommentPicker = false;
+  // Clear error dynamically when the user starts typing
+  onContentInput(): void {
+    if (this.postContent.trim()) {
+      this.showPostContentError = false;
+    }
+    this.showPicker = false;
+  }
+
+  togglePicker() {
+    this.showPicker = !this.showPicker;
+  }
+
+  toggleCommentPicker() {
+    this.showCommentPicker = !this.showCommentPicker;
+  }
+
+  addEmoji(event: any, textarea: HTMLTextAreaElement) {
+    const emoji = event.detail.unicode;
+
+    // Insert emoji at cursor position
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    this.postContent =
+      this.postContent +
+      this.messageText.substring(0, start) +
+      emoji +
+      this.messageText.substring(end);
+
+    // Restore focus & set cursor position after emoji
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+    });
+  }
+
+  addCommentEmoji(event: any, textarea: HTMLTextAreaElement, post: any) {
+    const emoji = event.detail.unicode;
+
+    // Insert emoji at cursor position
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    post.newCommentText =
+      post.newCommentText +
+      this.messageCommentText.substring(0, start) +
+      emoji +
+      this.messageCommentText.substring(end);
+
+    // Restore focus & set cursor position after emoji
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+    });
+  }
+}

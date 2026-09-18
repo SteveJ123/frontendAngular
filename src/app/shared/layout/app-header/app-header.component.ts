@@ -1,0 +1,418 @@
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  signal,
+  ViewChild,
+} from "@angular/core";
+import { SidebarService } from "../../services/SidebarService";
+import { CommonModule } from "@angular/common";
+import { NavigationEnd, Router, RouterModule } from "@angular/router";
+// import { ThemeToggleButtonComponent } from "../../components/common/theme-toggle/theme-toggle-button.component";
+// import { NotificationDropdownComponent } from "../../components/header/notification-dropdown/notification-dropdown.component";
+// import { UserDropdownComponent } from "../../components/header/user-dropdown/user-dropdown.component";
+import { apiUrl } from "../../core/constants/api";
+import { filter, Subscription } from "rxjs";
+import { AuthService } from "../../services/AuthService";
+import { Service } from "../../services/service";
+
+@Component({
+  selector: "app-header",
+  imports: [
+    CommonModule,
+    RouterModule,
+    // ThemeToggleButtonComponent,
+    // NotificationDropdownComponent,
+    // UserDropdownComponent,
+  ],
+  templateUrl: "./app-header.component.html",
+})
+export class AppHeaderComponent {
+  private apiUrl = `${apiUrl}`;
+  language = false;
+  isSidebarOpen = signal(false);
+  isProfileOpen = false;
+  private routerSubscription!: Subscription;
+
+  // isNotificationOpen = false;
+  // notifications: NotificationItem[] = [];
+  // unreadCount = 0;
+  // constructor(private router: Router) {}
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private service = inject(Service);
+
+  courseType = this.authService.getUserCourse();
+  userType = this.authService.getUserRole();
+  public sidebarService = inject(SidebarService);
+  private cdr = inject(ChangeDetectorRef);
+  username = this.authService.getUserName();
+  userId: any = "";
+
+  notifications: any[] = [];
+  unreadCount: number = 0;
+  isNotificationOpen: boolean = false;
+  private sub = new Subscription();
+  profileImage = "";
+
+  currentLang = "en";
+  get currentRouteLanguage(): string {
+    const urlSegments = this.router.url.split("/").filter(Boolean);
+    return urlSegments[0] === "te" ? "Telugu" : "English";
+  }
+  ngOnInit() {
+    const userLanguage = this.authService.getUserLanguage() || "en";
+    this.currentLang =
+      userLanguage.toLowerCase().trim() === "telugu" ? "te" : "en";
+    this.userId = Number(this.authService.getUserId());
+
+    // 1. Get user role from Auth Service
+    this.userType = this.authService.getUserRole();
+
+    // 2. Set initial language based on the active URL
+    this.detectLanguageFromUrl(this.router.url);
+
+    // 3. Listen for route changes dynamically (crucial for Admin switching between /en/ and /te/)
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.detectLanguageFromUrl(event.urlAfterRedirects || event.url);
+      });
+
+    if (this.userId) {
+      // 1. Fetch Profile Image based on user language
+      this.fetchUserProfile();
+
+      // 2. Initial Notifications Fetch via service
+      // this.service.fetchNotifications(this.userId);
+      this.fetchNotifications(this.userId);
+    }
+    this.sub.add(
+      this.service.notifications$.subscribe((list) => {
+        console.log("list", list);
+        this.notifications = list;
+        this.recalculateUnreadCount();
+        this.cdr.detectChanges();
+      }),
+    );
+
+    // 2. Subscribe to reactive unread count
+    this.sub.add(
+      this.service.unreadCount$.subscribe((count) => {
+        this.unreadCount = count;
+        this.cdr.detectChanges();
+      }),
+    );
+  }
+
+  private detectLanguageFromUrl(url: string): void {
+    const urlSegments = url.split("/");
+    // Check if the second segment is 'te' or 'en' (e.g., /te/community-post)
+    const langSegment = urlSegments[1]?.toLowerCase();
+
+    if (langSegment === "te") {
+      this.currentLang = "te";
+    } else if (langSegment === "en") {
+      this.currentLang = "en";
+    } else {
+      // Fallback for admin or un-localized routes
+      const defaultLang = (
+        this.authService.getUserLanguage() || ""
+      ).toLowerCase();
+      this.currentLang =
+        defaultLang === "telugu" || defaultLang === "te" ? "te" : "en";
+    }
+  }
+
+  // fetchUserProfile(): void {
+  //   // this.http.get<any>(`http://localhost:5000/api/personal-details/${this.userId}`)
+  //   this.service.getUserProfile(this.userId).subscribe({
+  //     next: (res: any) => {
+  //       if (res.data && res.data.profileImage) {
+  //         // Prepend your backend domain if storing relative file paths (/uploads/...)
+  //         this.profileImage = `http://localhost:5000${res.data.profileImage}`;
+  //         this.cdr.detectChanges();
+  //       }
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Failed to fetch profile image for header:', err);
+  //     },
+  //   });
+  // }
+
+  // fetchEnUserProfile(): void {
+  //   // this.http.get<any>(`http://localhost:5000/api/personal-details/${this.userId}`)
+  //   this.service.getEnUserProfile(this.userId).subscribe({
+  //     next: (res: any) => {
+  //       if (res.data && res.data.profileImage) {
+  //         // Prepend your backend domain if storing relative file paths (/uploads/...)
+  //         this.profileImage = `http://localhost:5000${res.data.profileImage}`;
+  //         this.cdr.detectChanges();
+  //       }
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Failed to fetch profile image for header:', err);
+  //     },
+  //   });
+  // }
+
+  fetchUserProfile(): void {
+    this.service
+      .getPersonalDetails(this.userId, this.currentRouteLanguage)
+      .subscribe({
+        next: (res: any) => {
+          console.log("res profile", res);
+          if (res.data && res.data.profileImage) {
+            const path = res.data.profileImage;
+            //   const cleanedPath = path.startsWith('/') ? path.slice(1) : path;
+            //   this.profileImage = `${this.apiUrl}${cleanedPath}`;
+            this.profileImage = path;
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err: any) => {
+          console.error("Failed to fetch profile image for header:", err);
+        },
+      });
+  }
+
+  toggleNotificationDropdown(): void {
+    this.isNotificationOpen = !this.isNotificationOpen;
+  }
+
+  fetchNotifications(userId: any): void {
+    this.service
+      .getUserNotifications(userId, this.currentRouteLanguage)
+      .subscribe((data: any) => {
+        console.log("data", data);
+        this.notifications = data.data;
+        this.unreadCount = data.data.filter((n: any) => !n.isRead).length;
+      });
+  }
+
+  onNotificationClick(notification: any): void {
+    console.log("notification", notification);
+    if (!notification.isRead) {
+      // Optimistic UI update
+      notification.isRead = true;
+      this.recalculateUnreadCount();
+
+      // Pass language to ensure correct patch route is hit
+      this.service.markAsRead(notification._id).subscribe({
+        error: (err: any) => {
+          console.error("Failed to update notification status:", err);
+          notification.isRead = false;
+          this.recalculateUnreadCount();
+        },
+      });
+    }
+
+    const targetPostId =
+      typeof notification.postId === "object" && notification.postId !== null
+        ? notification.postId._id
+        : notification.postId;
+
+    const targetRoute =
+      notification.postModel === "AdminPost" ? "community-post" : "user-feed";
+
+    if (this.userType == "admin") {
+      this.currentLang =
+        notification.postId.language === "English" ? "en" : "te";
+    }
+
+    // if (targetPostId) {
+    //   this.router.navigate(['/', this.currentLang, targetRoute], {
+    //     queryParams: { postId: targetPostId },
+    //   });
+    // }
+
+    // Check if commentId exists, or if postModel indicates an AdminPost comment
+    const isComment =
+      !!notification.commentId._id || notification.postModel === "AdminPost";
+
+    if (isComment) {
+      const targetPostId =
+        typeof notification.postId === "object"
+          ? notification.postId._id
+          : notification.postId;
+
+      this.router.navigate(["/", this.currentLang, targetRoute], {
+        queryParams: {
+          postId: targetPostId,
+          commentId: notification.commentId._id,
+        },
+        fragment: notification.commentId._id
+          ? `comment-${notification.commentId._id}`
+          : undefined,
+      });
+    } else {
+      const targetPostId =
+        typeof notification.postId === "object"
+          ? notification.postId._id
+          : notification.postId;
+
+      this.router.navigate(["/", this.currentLang, targetRoute], {
+        queryParams: { postId: targetPostId },
+      });
+    }
+
+    this.isNotificationOpen = false;
+  }
+
+  // onNotificationClick(notification: any): void {
+  //   console.log('notification.isRead', notification.isRead);
+  //   if (!notification.isRead) {
+  //     // Service tap() will update notificationsSubject and unreadCountSubject globally
+  //     this.service.markAsRead(notification._id).subscribe({
+  //       error: (err) => {
+  //         console.error('Failed to update notification status:', err);
+  //       },
+  //     });
+  //   }
+
+  //   const targetPostId =
+  //     typeof notification.postId === 'object' && notification.postId !== null
+  //       ? notification.postId._id
+  //       : notification.postId;
+
+  //   const targetRoute = notification.postModel === 'AdminPost' ? 'community-post' : 'user-feed';
+
+  //   if (targetPostId) {
+  //     this.router.navigate(['/', this.currentLang, targetRoute], {
+  //       queryParams: { postId: targetPostId },
+  //     });
+  //   }
+
+  //   this.isNotificationOpen = false;
+  // }
+
+  private recalculateUnreadCount(): void {
+    this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
+    console.log("this.unreadCount", this.unreadCount);
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  toggleSidebar() {
+    // this.isSidebarOpen.update((v) => !v);
+    this.sidebarService.toggleSidebar();
+  }
+
+  isCoursesOpen: boolean = false;
+
+  // Dynamic course collection
+  courses: any[] = [
+    { label: "FACE YOGA", route: "face-yoga", icon: "🧘‍♀️" },
+    { label: "FACE YOGA + RAJ YOGA", route: "face-raj-yoga", icon: "🧘‍♂️" },
+  ];
+
+  toggleCoursesDropdown(): void {
+    // Navigate using array format with the current language prefix
+    this.router.navigate(["/", this.currentLang, "courses-list"]);
+    // this.router.navigate(['/courses-list']);
+  }
+
+  navigateTo(route: string): void {
+    // Ensure route has no leading slash to avoid double slashes when building the array
+    const cleanRoute = route.startsWith("/") ? route.substring(1) : route;
+
+    // Navigate using array format with the current language prefix
+    this.router.navigate(["/", this.currentLang, cleanRoute]);
+    // this.router.navigate([route]);
+    this.isCoursesOpen = false;
+  }
+
+  @HostListener("document:click", ["$event"])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest(".relative")) {
+      this.isCoursesOpen = false;
+    }
+  }
+
+  toggleProfileDropdown(): void {
+    this.isProfileOpen = !this.isProfileOpen;
+  }
+
+  viewProfile(): void {
+    this.router.navigate(["/", this.currentLang, "user-profile"]);
+    this.isProfileOpen = false;
+    // Add navigation logic (e.g., router.navigate(['/profile']))
+  }
+
+  myAccount(): void {
+    this.isProfileOpen = false;
+    // this.router.navigate(['edit-profile']);
+    this.router.navigate(["/", this.currentLang, "edit-profile"]);
+
+    // Add navigation logic (e.g., router.navigate(['/account']))
+  }
+
+  logout(): void {
+    this.isProfileOpen = false;
+    // Add logout logic (e.g., clear tokens, redirect to login)
+    this.authService.logout();
+    this.router.navigate(["/login"]);
+  }
+
+  // ngOnDestroy(): void {
+  //   this.subscriptions.unsubscribe();
+  // }
+
+  toggleLanguage() {
+    this.language = !this.language;
+  }
+
+  // Adds handler to clear the array and update counts
+  markAllAsRead(): void {
+    // Option A: If syncing with backend API service
+
+    // this.notificationService.markAllAsRead().subscribe({
+    //   next: () => {
+    //     this.notifications = [];
+    //     this.unreadCount = 0;
+    //   },
+    //   error: (err) => console.error('Failed to mark notifications read', err)
+    // });
+
+    // Option B: Client-side state clear
+    // this.notifications = [];
+    // this.unreadCount = 0;
+
+    const userId = this.userId; // Retrieve your active user ID variable
+
+    if (!userId) return;
+
+    // Optimistically clear the local view and counter
+    const previousNotifications = [...this.notifications];
+    const previousUnreadCount = this.unreadCount;
+
+    this.notifications = [];
+    this.unreadCount = 0;
+
+    // Call the backend API service
+    this.service.markAllAsRead(userId, this.currentRouteLanguage).subscribe({
+      next: (res: any) => {
+        console.log("All notifications marked as read:", res);
+      },
+      error: (err: any) => {
+        console.error(
+          "Failed to mark all notifications as read on backend:",
+          err,
+        );
+
+        // Rollback optimistic state changes on error
+        this.notifications = previousNotifications;
+        this.unreadCount = previousUnreadCount;
+      },
+    });
+  }
+}

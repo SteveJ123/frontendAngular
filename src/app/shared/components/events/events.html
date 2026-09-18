@@ -1,0 +1,159 @@
+<div class="p-6 max-w-4xl mx-auto h-dvh">
+  <!-- Language Selector Header -->
+  <div class="flex justify-between items-center mb-6 ml-6">
+    <h2 class="text-2xl font-bold text-gray-800">
+      📅 {{ currentLangSelected === 'en' ? 'Events Management' : 'కార్యక్రమాల నిర్వహణ' }}
+    </h2>
+    <div class="flex gap-2">
+      <button
+        (click)="switchLanguage('en')"
+        [class.bg-[#960000]]="currentLangSelected === 'en'"
+        [class.text-white]="currentLangSelected === 'en'"
+        class="px-3 py-1.5 text-sm rounded-lg border border-gray-300 hover:bg-gray-100"
+      >
+        English
+      </button>
+      <button
+        (click)="switchLanguage('te')"
+        [class.bg-[#960000]]="currentLangSelected === 'te'"
+        [class.text-white]="currentLangSelected === 'te'"
+        class="px-3 py-1.5 text-sm rounded-lg border border-gray-300 hover:bg-gray-100"
+      >
+        తెలుగు
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Alert Banner -->
+  <div
+    *ngIf="errorMessage"
+    class="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg flex justify-between items-center"
+  >
+    <span>{{ errorMessage }}</span>
+    <button (click)="errorMessage = ''" class="font-bold">✕</button>
+  </div>
+
+  <!-- Create/Edit Form -->
+  <div class="bg-[#f3fab5] p-4 rounded-xl shadow-xs border border-gray-200 mb-8">
+    <h3 class="text-lg font-semibold mb-3">
+      {{ editingEventId ? 'Edit Event' : 'Add New Event' }}
+    </h3>
+
+    <div class="space-y-4">
+      <input
+        type="text"
+        [(ngModel)]="title"
+        placeholder="Enter event title"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <div class="flex items-center gap-4">
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="text-sm text-gray-600"
+        />
+        <img
+          *ngIf="imagePreviewUrl"
+          [src]="imagePreviewUrl"
+          class="w-16 h-16 object-cover rounded-lg border"
+        />
+      </div>
+
+      <div class="flex gap-2">
+        <button
+          (click)="saveEvent()"
+          class="px-4 py-2 bg-[#960000] text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+        >
+          {{ editingEventId ? 'Update Event' : 'Save Event' }}
+        </button>
+        <button
+          *ngIf="editingEventId"
+          (click)="resetForm()"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events List -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div
+      *ngFor="let item of events"
+      class="border border-gray-200 rounded-xl p-3 bg-[#f3fab5] flex gap-3 items-center shadow-xs"
+    >
+      <img [src]="getImageUrl(item.imageUrl)" class="w-20 h-20 object-cover rounded-lg shrink-0" />
+      <div class="flex-1">
+        <h4 class="font-semibold text-gray-800 text-base mb-1">{{ item.title }}</h4>
+        <span
+          class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md uppercase font-bold"
+          >{{ item.language }}</span
+        >
+      </div>
+      <div class="flex flex-col gap-1">
+        <button (click)="editEvent(item)" class="text-xs text-blue-600 hover:underline">
+          Edit
+        </button>
+        <button (click)="openDeleteModal(item._id!)" class="text-xs text-red-600 hover:underline">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAILWIND POPUP CONFIRMATION MODAL -->
+  <div
+    *ngIf="showDeleteModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity animate-fadeIn"
+  >
+    <div
+      class="bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-100 max-w-sm w-full p-6 space-y-4 transform transition-all scale-100"
+    >
+      <!-- Modal Header & Icon -->
+      <div class="flex items-center justify-center gap-3">
+        <div>
+          <div
+            class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 shrink-0"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          </div>
+          <h3 class="text-center text-base font-bold text-gray-900">Delete</h3>
+          <!-- <p class="text-center text-xs text-gray-500 mt-0.5">This action cannot be undone.</p> -->
+        </div>
+      </div>
+
+      <!-- Modal Message -->
+      <p class="text-xs text-gray-600 leading-relaxed">
+        Are you sure you want to permanently delete this product listing from the database?
+      </p>
+
+      <!-- Modal Actions (Cancel & OK) -->
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button
+          type="button"
+          (click)="cancelDelete()"
+          class="px-4 py-2 bg-[#f3fab5] hover:bg-[#f3fab5] text-gray-700 text-xs font-bold rounded-xl transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          (click)="confirmDelete()"
+          class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-colors shadow-sm"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
