@@ -118,7 +118,7 @@ export class CreateAdminPost {
 
   title: string = "";
 
-  targetPostId: string | null = null;
+  targetPostId: any | null = null;
 
   editingPostId: any | null = null;
   editContent: string = "";
@@ -243,13 +243,13 @@ export class CreateAdminPost {
     // });
 
     this.route.queryParams.subscribe((params) => {
-      this.targetPostId = params["postId"] || null;
-      this.targetCommentId = params["commentId"] || null;
+      this.targetPostId = Number(params["postId"]) || null;
+      this.targetCommentId = Number(params["commentId"]) || null;
 
       if (this.targetPostId && this.posts && this.posts.length > 0) {
         this.handlePostAndCommentNavigation(
-          Number(this.targetPostId),
-          Number(this.targetCommentId),
+          this.targetPostId,
+          this.targetCommentId,
         );
       }
     });
@@ -334,8 +334,8 @@ export class CreateAdminPost {
 
     if (this.targetPostId) {
       this.handlePostAndCommentNavigation(
-        Number(this.targetPostId),
-        Number(this.targetCommentId),
+        this.targetPostId,
+        this.targetCommentId,
       );
     }
   }
@@ -413,8 +413,8 @@ export class CreateAdminPost {
         // }
         if (this.targetPostId) {
           this.handlePostAndCommentNavigation(
-            Number(this.targetPostId),
-            Number(this.targetCommentId),
+            this.targetPostId,
+            this.targetCommentId,
           );
         }
       },
@@ -1189,8 +1189,8 @@ export class CreateAdminPost {
         this.cd.detectChanges();
         if (this.targetPostId && this.posts && this.posts.length > 0) {
           this.handlePostAndCommentNavigation(
-            Number(this.targetPostId),
-            Number(this.targetCommentId),
+            this.targetPostId,
+            this.targetCommentId,
           );
         }
       },

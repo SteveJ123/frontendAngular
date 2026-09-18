@@ -780,36 +780,34 @@ export class CreateUserPost {
     }
 
     const file: any = this.selectedFile;
-    if (!file) {
-      alert("Please select a file");
-      return;
-    }
 
     this.isUploading = true;
-
+    let fileLink = "";
     try {
-      const startTime = new Date();
+      if (file) {
+        const startTime = new Date();
 
-      // 2. Upload file to AWS S3
-      const uploadFormData = new FormData();
-      uploadFormData.append("file", file);
+        // 2. Upload file to AWS S3
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", file);
 
-      const uploadRes: any = await firstValueFrom(
-        this.service.uploadAWSMedia(uploadFormData),
-      );
+        const uploadRes: any = await firstValueFrom(
+          this.service.uploadAWSMedia(uploadFormData),
+        );
 
-      if (!uploadRes || !uploadRes.success) {
-        throw new Error("Error uploading media file to AWS");
+        if (!uploadRes || !uploadRes.success) {
+          throw new Error("Error uploading media file to AWS");
+        }
+
+        fileLink = uploadRes.data;
+        const endTime = new Date();
+        console.log("File uploaded to S3:", fileLink);
+        console.log(
+          "Upload time:",
+          (endTime.getTime() - startTime.getTime()) / 1000,
+          "seconds",
+        );
       }
-
-      const fileLink = uploadRes.data;
-      const endTime = new Date();
-      console.log("File uploaded to S3:", fileLink);
-      console.log(
-        "Upload time:",
-        (endTime.getTime() - startTime.getTime()) / 1000,
-        "seconds",
-      );
 
       // Target Language Selection
       const targetLanguage = this.currentRouteLanguage;

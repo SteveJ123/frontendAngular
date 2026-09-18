@@ -893,7 +893,7 @@
                       >
                         <textarea
                           rows="2"
-                          [(ngModel)]="post.newCommentText"
+                          [(ngModel)]="post.newReplyCommentText"
                           placeholder="Reply"
                           class="w-full bg-transparent text-xs text-gray-800 placeholder-gray-400 focus:outline-none resize-none"
                         ></textarea>
@@ -904,7 +904,7 @@
                           <button
                             type="button"
                             (click)="submitComment(post)"
-                            [disabled]="!post.newCommentText?.trim()"
+                            [disabled]="!post.newReplyCommentText?.trim()"
                             class="text-xs font-semibold px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 disabled:hover:bg-blue-600 transition"
                           >
                             Post Reply
@@ -952,7 +952,7 @@
               <!-- Input Container -->
               <div class="space-y-2 pt-2">
                 <!-- Replying Banner -->
-                <div
+                <!-- <div
                   *ngIf="post.replyingToId"
                   class="text-xs text-blue-600 font-medium flex justify-between items-center bg-blue-50 p-2 rounded-lg border border-blue-100"
                 >
@@ -963,7 +963,7 @@
                   >
                     Cancel
                   </button>
-                </div>
+                </div> -->
 
                 <!-- Input Box -->
                 <div class="flex items-start gap-3">

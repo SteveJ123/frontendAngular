@@ -136,9 +136,9 @@ export class CreateAdminPost {
 
   title: string = "";
 
-  targetPostId: string | null = null;
+  targetPostId: any | null = null;
 
-  editingPostId: string | null = null;
+  editingPostId: any | null = null;
   editContent: string = "";
 
   // Track existing files marked for removal during edit
@@ -233,7 +233,7 @@ export class CreateAdminPost {
       : this.apiUrl;
     this.userProfileImage = localStorage.getItem("profileImage");
     if (this.authService.getUserId()) {
-      this.userId = this.authService.getUserId();
+      this.userId = Number(this.authService.getUserId());
       // this.fetchUserProfile();
     }
 
@@ -256,13 +256,13 @@ export class CreateAdminPost {
     // });
 
     this.route.queryParams.subscribe((params) => {
-      this.targetPostId = params["postId"] || null;
-      this.targetCommentId = params["commentId"] || null;
+      this.targetPostId = Number(params["postId"]) || null;
+      this.targetCommentId = Number(params["commentId"]) || null;
 
       if (this.targetPostId && this.posts && this.posts.length > 0) {
         this.handlePostAndCommentNavigation(
-          Number(this.targetPostId),
-          Number(this.targetCommentId),
+          this.targetPostId,
+          this.targetCommentId,
         );
       }
     });
@@ -1162,8 +1162,8 @@ export class CreateAdminPost {
     //   },
     //   error: (err) => console.error('Failed to submit comment', err),
     // });
-    const text = post.newCommentText?.trim();
-    if (!text) return;
+    // const text = post.newCommentText?.trim();
+    // if (!text) return;
 
     if (post.replyingToId) {
       // Logic for adding a nested reply
@@ -1171,7 +1171,7 @@ export class CreateAdminPost {
         postId: post._id,
         userId: this.userId,
         username: this.commentUsername,
-        content: text,
+        content: post.newReplyCommentText,
         parentId: post.replyingToId || null,
         language: this.currentRouteLanguage,
       };
@@ -1230,7 +1230,7 @@ export class CreateAdminPost {
 
   startEditing(post: any): void {
     this.activeMenuPostId = null;
-    this.editingPostId = post._id;
+    this.editingPostId = Number(post._id);
     this.editContent = post.content;
     this.removedMediaIds = [];
     this.newEditFiles = [];
