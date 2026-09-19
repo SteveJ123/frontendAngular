@@ -8,7 +8,7 @@ import { Router } from "@angular/router";
 import { AuthService } from "../../../services/AuthService";
 
 export interface Product {
-  _id?: string;
+  id?: string;
   title: string;
   productUrl: string;
   imageUrl: string;
@@ -31,18 +31,18 @@ export class Shop {
   // Set role to 'admin' or 'user'
   userRole: string = "";
 
-  products: Product[] = [];
+  products: any[] = [];
   isEditing = false;
-  editingId: string | null = null;
+  editingId: any | null = null;
 
-  productForm: Product = {
+  productForm: any = {
     title: "",
     productUrl: "",
     imageUrl: "",
     price: "",
     storeName: "Amazon",
   };
-  productToDeleteId: string = "";
+  productToDeleteId: any = "";
   showDeleteModal: boolean = false;
 
   constructor(private http: HttpClient) {}
@@ -116,9 +116,9 @@ export class Shop {
     }
   }
 
-  startEditing(product: Product): void {
+  startEditing(product: any): void {
     this.isEditing = true;
-    this.editingId = product._id || null;
+    this.editingId = Number(product.id) || null;
     this.productForm = { ...product };
   }
 
@@ -153,8 +153,9 @@ export class Shop {
   }
 
   // Opens the custom popup dialog
-  openDeleteModal(id: string): void {
-    this.productToDeleteId = id;
+  openDeleteModal(id: any): void {
+    this.productToDeleteId = Number(id);
+    alert(this.productToDeleteId);
     this.showDeleteModal = true;
   }
 

@@ -227,7 +227,7 @@ export class CreateAdminPost {
       // this.fetchUserProfile();
     }
 
-    // this.fetchLeaderBoard();
+    this.fetchLeaderBoard();
     this.getPostsObservable();
     this.fetchEvents();
     // this.route.queryParams.subscribe((params) => {

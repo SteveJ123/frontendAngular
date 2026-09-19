@@ -240,7 +240,7 @@ export class CreateAdminPost {
     this.userType = localStorage.getItem("role") || "";
     this.fetchAdminProfile();
 
-    // this.fetchLeaderBoard();
+    this.fetchLeaderBoard();
     this.getPostsObservable();
     this.fetchEvents();
     // this.route.queryParams.subscribe((params) => {
