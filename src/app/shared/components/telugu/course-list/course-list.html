@@ -9,12 +9,19 @@
   </button>
 </div>
 <!-- bg-gray-50/50 -->
-<div *ngIf="showCreateCourse" class="min-h-screen bg-[#f3fab5] p-4 sm:p-6 lg:p-8 w-full">
+<div
+  *ngIf="showCreateCourse"
+  class="min-h-screen bg-[#f3fab5] p-4 sm:p-6 lg:p-8 w-full"
+>
   <div class="w-full mx-auto space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div
+      class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+    >
       <div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+        <h1
+          class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight"
+        >
           Create New Course
         </h1>
         <p class="text-xs sm:text-sm text-gray-500">
@@ -46,7 +53,9 @@
       >
         <!-- Course Title -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+          <label
+            class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
+          >
             Course Title <span class="text-rose-500">*</span>
           </label>
           <!-- <input
@@ -71,7 +80,8 @@
 
         <!-- Instructor Name -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
+          <label
+            class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
             >Instructor Name</label
           >
           <input
@@ -85,7 +95,9 @@
 
         <!-- Thumbnail Upload Input -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+          <label
+            class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
+          >
             Thumbnail Image <span class="text-rose-500">*</span>
           </label>
           <input
@@ -193,7 +205,9 @@
 
       <!-- Live Preview Section -->
       <div class="lg:col-span-5 space-y-4">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400">Card Preview</h3>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400">
+          Card Preview
+        </h3>
 
         <div
           class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col justify-between relative"
@@ -209,7 +223,10 @@
                 alt="Course Preview"
                 class="w-full h-full object-cover"
               />
-              <div *ngIf="!imagePreview" class="text-xs text-gray-400 font-medium">
+              <div
+                *ngIf="!imagePreview"
+                class="text-xs text-gray-400 font-medium"
+              >
                 No Thumbnail Selected
               </div>
 
@@ -230,7 +247,9 @@
 
             <!-- Text Content -->
             <div class="p-5 space-y-2">
-              <h2 class="text-base font-bold text-gray-900 leading-snug line-clamp-2">
+              <h2
+                class="text-base font-bold text-gray-900 leading-snug line-clamp-2"
+              >
                 {{ course.title || 'Course Title Preview' }}
               </h2>
 
@@ -239,7 +258,8 @@
               </p>
 
               <p class="text-xs text-gray-400">
-                {{ course.sectionsCount || 1 }} sections • {{ course.lecturesCount || 1 }} lectures
+                {{ course.sectionsCount || 1 }} sections • {{
+                course.lecturesCount || 1 }} lectures
               </p>
             </div>
           </div>
@@ -259,8 +279,14 @@
 </div>
 <div class="min-h-screen bg-[#f3fab5] p-4 sm:p-6 lg:p-8">
   <div class="max-w-7xl mx-auto space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">పాఠ్యక్రమము</h1>
+    <div
+      class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+    >
+      <h1
+        class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight"
+      >
+        పాఠ్యక్రమము
+      </h1>
     </div>
 
     <!-- Skeleton Loading State -->
@@ -289,12 +315,18 @@
       >
         <!-- DISPLAY MODE -->
         <div
-          *ngIf="editingCourseId !== course._id"
-          (click)="viewCourseDetails(course._id)"
+          *ngIf="editingCourseId !== course.id"
+          (click)="viewCourseDetails(course.id)"
           class="cursor-pointer"
         >
-          <div class="relative aspect-video w-full bg-[#f3fab5] overflow-hidden">
-            <img [src]="course.thumbnail" [alt]="course.title" class="w-full h-full object-cover" />
+          <div
+            class="relative aspect-video w-full bg-[#f3fab5] overflow-hidden"
+          >
+            <img
+              [src]="course.thumbnail"
+              [alt]="course.title"
+              class="w-full h-full object-cover"
+            />
             <span
               *ngIf="course.isNewCourse"
               class="absolute bottom-3 right-3 bg-rose-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase"
@@ -315,7 +347,12 @@
                 (click)="startEditing($event, course)"
                 class="p-1.5 bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 rounded-lg shadow-sm backdrop-blur-md transition-all"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -325,10 +362,15 @@
                 </svg>
               </button>
               <button
-                (click)="openDeleteModal($event, course._id!, 'course')"
+                (click)="openDeleteModal($event, course.id!, 'course')"
                 class="p-1.5 bg-white/90 hover:bg-white text-gray-700 hover:text-red-600 rounded-lg shadow-sm backdrop-blur-md transition-all"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -341,12 +383,18 @@
           </div>
 
           <div class="p-5 space-y-2 bg-[#f3fab5]">
-            <h2 class="text-base font-bold text-gray-900 leading-snug line-clamp-2">
-              {{ course.title === 'Face Yoga' ? 'ఫేస్ యోగా' : 'ఫేస్ యోగా + రాజ్ యోగా' }}
+            <h2
+              class="text-base font-bold text-gray-900 leading-snug line-clamp-2"
+            >
+              {{ course.title === 'Face Yoga' ? 'ఫేస్ యోగా' : 'ఫేస్ యోగా + రాజ్
+              యోగా' }}
             </h2>
-            <p class="text-xs font-semibold text-gray-500">{{ course.instructor }}</p>
+            <p class="text-xs font-semibold text-gray-500">
+              {{ course.instructor }}
+            </p>
             <p class="text-xs text-gray-400">
-              {{ course.sectionsCount || 1 }} sections • {{ course.lecturesCount || 1 }} lectures
+              {{ course.sectionsCount || 1 }} sections • {{ course.lecturesCount
+              || 1 }} lectures
             </p>
           </div>
 
@@ -360,20 +408,36 @@
         </div>
 
         <!-- INLINE EDIT MODE -->
-        <div *ngIf="editingCourseId === course._id" class="p-5 space-y-4 bg-gray-50/50">
-          <h3 class="text-xs font-bold uppercase text-gray-700">Edit Course Details</h3>
+        <div
+          *ngIf="editingCourseId === course.id"
+          class="p-5 space-y-4 bg-gray-50/50"
+        >
+          <h3 class="text-xs font-bold uppercase text-gray-700">
+            Edit Course Details
+          </h3>
 
           <div>
-            <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Title</label>
-            <input
-              type="text"
+            <label
+              class="block text-[10px] font-bold uppercase text-gray-500 mb-1"
+              >Title</label
+            >
+            <select
               [(ngModel)]="editData.title"
-              class="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-500"
-            />
+              name="title"
+              required
+              class="w-full px-4 py-2.5 bg-[#f3fab5] border border-gray-200 rounded-xl text-sm text-gray-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all cursor-pointer"
+            >
+              <option value="" disabled selected>Select Course Title</option>
+              <option value="Face Yoga">ఫేస్ యోగా</option>
+              <option value="Face Yoga + Raj Yoga">
+                ఫేస్ యోగా + రాజ్ యోగా
+              </option>
+            </select>
           </div>
 
           <div>
-            <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1"
+            <label
+              class="block text-[10px] font-bold uppercase text-gray-500 mb-1"
               >Instructor</label
             >
             <input
@@ -384,7 +448,8 @@
           </div>
 
           <div>
-            <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1"
+            <label
+              class="block text-[10px] font-bold uppercase text-gray-500 mb-1"
               >Thumbnail Image</label
             >
             <input
@@ -430,7 +495,8 @@
   >
     <div class="flex items-center justify-between">
       <h2 class="text-xl font-bold text-gray-900">
-        {{ isEditingNutrition ? 'Edit Recipe Item' : 'Add Nutritious Food or Healthy Drink' }}
+        {{ isEditingNutrition ? 'Edit Recipe Item' : 'Add Nutritious Food or
+        Healthy Drink' }}
       </h2>
       <button
         *ngIf="isEditingNutrition"
@@ -441,24 +507,35 @@
       </button>
     </div>
 
-    <form (ngSubmit)="saveNutritionItem()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form
+      (ngSubmit)="saveNutritionItem()"
+      class="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
       <!-- Category Select -->
       <div>
-        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Category *</label>
+        <label class="block text-xs font-bold uppercase text-gray-700 mb-1"
+          >Category *</label
+        >
         <select
           [(ngModel)]="nutritionForm.category"
           name="category"
           required
           class="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-semibold"
         >
-          <option value="nutritiousFood">Nutritious Food / పోషకమైన ఆహారం</option>
-          <option value="healthyDrink">Healthy Drink / ఆరోగ్యకరమైన పానీయం</option>
+          <option value="nutritiousFood">
+            Nutritious Food / పోషకమైన ఆహారం
+          </option>
+          <option value="healthyDrink">
+            Healthy Drink / ఆరోగ్యకరమైన పానీయం
+          </option>
         </select>
       </div>
 
       <!-- Language Select -->
       <div>
-        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Language *</label>
+        <label class="block text-xs font-bold uppercase text-gray-700 mb-1"
+          >Language *</label
+        >
         <select
           [(ngModel)]="nutritionForm.language"
           name="language"
@@ -472,7 +549,9 @@
 
       <!-- Title -->
       <div>
-        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Title *</label>
+        <label class="block text-xs font-bold uppercase text-gray-700 mb-1"
+          >Title *</label
+        >
         <input
           type="text"
           [(ngModel)]="nutritionForm.title"
@@ -495,7 +574,9 @@
       </div> -->
 
       <div>
-        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Image URL *</label>
+        <label class="block text-xs font-bold uppercase text-gray-700 mb-1"
+          >Image URL *</label
+        >
         <input
           type="url"
           [(ngModel)]="nutritionForm.imageUrl"
@@ -507,7 +588,9 @@
       </div>
       <!-- Ingredients -->
       <div class="md:col-span-2">
-        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Ingredients *</label>
+        <label class="block text-xs font-bold uppercase text-gray-700 mb-1"
+          >Ingredients *</label
+        >
         <input
           type="text"
           [(ngModel)]="nutritionForm.ingredients"
@@ -520,7 +603,9 @@
 
       <!-- Description -->
       <div class="md:col-span-2">
-        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Description *</label>
+        <label class="block text-xs font-bold uppercase text-gray-700 mb-1"
+          >Description *</label
+        >
         <textarea
           [(ngModel)]="nutritionForm.description"
           name="description"
@@ -550,7 +635,8 @@
     <div class="space-y-6">
       <div class="border-b border-gray-300 pb-2">
         <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900">
-          {{ currentRouteLanguage === 'Telugu' ? 'పోషకమైన ఆహారం' : 'Nutritious Food' }}
+          {{ currentRouteLanguage === 'Telugu' ? 'పోషకమైన ఆహారం' : 'Nutritious
+          Food' }}
         </h2>
       </div>
 
@@ -560,7 +646,10 @@
           class="bg-[#f3fab5] rounded-2xl border border-gray-200 shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12 relative"
         >
           <!-- Admin Edit/Delete Controls -->
-          <div *ngIf="userRole === 'admin'" class="absolute top-2 right-2 flex gap-1 z-10">
+          <div
+            *ngIf="userRole === 'admin'"
+            class="absolute top-2 right-2 flex gap-1 z-10"
+          >
             <button
               (click)="editNutritionItem(item)"
               class="p-1.5 bg-white/90 hover:bg-white rounded-lg text-gray-700 hover:text-blue-600 shadow-sm"
@@ -568,7 +657,7 @@
               ✏️
             </button>
             <button
-              (click)="openDeleteModal($event, item._id!, 'nutrition')"
+              (click)="openDeleteModal($event, item.id!, 'nutrition')"
               class="p-1.5 bg-white/90 hover:bg-white rounded-lg text-gray-700 hover:text-red-600 shadow-sm"
             >
               🗑️
@@ -576,25 +665,43 @@
           </div>
 
           <!-- Left Image -->
-          <div class="md:col-span-6 aspect-video md:aspect-auto w-full bg-gray-100">
-            <img [src]="item.imageUrl" [alt]="item.title" class="w-full h-full object-cover" />
+          <div
+            class="md:col-span-6 aspect-video md:aspect-auto w-full bg-gray-100"
+          >
+            <img
+              [src]="item.imageUrl"
+              [alt]="item.title"
+              class="w-full h-full object-cover"
+            />
           </div>
 
           <!-- Right Content -->
-          <div class="md:col-span-6 p-5 flex flex-col justify-between space-y-3">
+          <div
+            class="md:col-span-6 p-5 flex flex-col justify-between space-y-3"
+          >
             <div class="space-y-2">
-              <h3 class="text-base font-bold text-gray-900 leading-snug">{{ item.title }}</h3>
+              <h3 class="text-base font-bold text-gray-900 leading-snug">
+                {{ item.title }}
+              </h3>
 
               <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">
-                  {{ currentRouteLanguage === 'Telugu' ? 'కావలసిన పదార్థాలు' : 'Ingredients' }}:
+                <span
+                  class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block"
+                >
+                  {{ currentRouteLanguage === 'Telugu' ? 'కావలసిన పదార్థాలు' :
+                  'Ingredients' }}:
                 </span>
-                <p class="text-xs text-gray-700 font-medium line-clamp-2">{{ item.ingredients }}</p>
+                <p class="text-xs text-gray-700 font-medium line-clamp-2">
+                  {{ item.ingredients }}
+                </p>
               </div>
 
               <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">
-                  {{ currentRouteLanguage === 'Telugu' ? 'వివరణ' : 'Description' }}:
+                <span
+                  class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block"
+                >
+                  {{ currentRouteLanguage === 'Telugu' ? 'వివరణ' : 'Description'
+                  }}:
                 </span>
                 <p class="text-xs text-gray-600 leading-relaxed line-clamp-3">
                   {{ item.description }}
@@ -603,10 +710,11 @@
               <!-- View Detail Button -->
               <div class="pt-2">
                 <button
-                  (click)="viewNutritionDetail(item._id)"
+                  (click)="viewNutritionDetail(item.id)"
                   class="w-full py-2 px-4 bg-[#960000] hover:bg-gray-800 text-white text-xs font-bold rounded-xl transition-colors shadow-sm"
                 >
-                  {{ currentRouteLanguage === 'Telugu' ? 'వివరాలు చూడండి' : 'View Details' }}
+                  {{ currentRouteLanguage === 'Telugu' ? 'వివరాలు చూడండి' :
+                  'View Details' }}
                 </button>
               </div>
             </div>
@@ -619,7 +727,8 @@
     <div class="space-y-6">
       <div class="border-b border-gray-300 pb-2">
         <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900">
-          {{ currentRouteLanguage === 'Telugu' ? 'ఆరోగ్యకరమైన పానీయాలు' : 'Healthy Drinks' }}
+          {{ currentRouteLanguage === 'Telugu' ? 'ఆరోగ్యకరమైన పానీయాలు' :
+          'Healthy Drinks' }}
         </h2>
       </div>
 
@@ -629,7 +738,10 @@
           class="bg-[#f3fab5] rounded-2xl border border-gray-200 shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12 relative"
         >
           <!-- Admin Edit/Delete Controls -->
-          <div *ngIf="userRole === 'admin'" class="absolute top-2 right-2 flex gap-1 z-10">
+          <div
+            *ngIf="userRole === 'admin'"
+            class="absolute top-2 right-2 flex gap-1 z-10"
+          >
             <button
               (click)="editNutritionItem(drink)"
               class="p-1.5 bg-white/90 hover:bg-white rounded-lg text-gray-700 hover:text-blue-600 shadow-sm"
@@ -637,7 +749,7 @@
               ✏️
             </button>
             <button
-              (click)="openDeleteModal($event, drink._id!, 'nutrition')"
+              (click)="openDeleteModal($event, drink.id!, 'nutrition')"
               class="p-1.5 bg-white/90 hover:bg-white rounded-lg text-gray-700 hover:text-red-600 shadow-sm"
             >
               🗑️
@@ -645,18 +757,31 @@
           </div>
 
           <!-- Left Image -->
-          <div class="md:col-span-6 aspect-video md:aspect-auto w-full bg-gray-100">
-            <img [src]="drink.imageUrl" [alt]="drink.title" class="w-full h-full object-cover" />
+          <div
+            class="md:col-span-6 aspect-video md:aspect-auto w-full bg-gray-100"
+          >
+            <img
+              [src]="drink.imageUrl"
+              [alt]="drink.title"
+              class="w-full h-full object-cover"
+            />
           </div>
 
           <!-- Right Content -->
-          <div class="md:col-span-6 p-5 flex flex-col justify-between space-y-3">
+          <div
+            class="md:col-span-6 p-5 flex flex-col justify-between space-y-3"
+          >
             <div class="space-y-2">
-              <h3 class="text-base font-bold text-gray-900 leading-snug">{{ drink.title }}</h3>
+              <h3 class="text-base font-bold text-gray-900 leading-snug">
+                {{ drink.title }}
+              </h3>
 
               <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">
-                  {{ currentRouteLanguage === 'Telugu' ? 'కావలసిన పదార్థాలు' : 'Ingredients' }}:
+                <span
+                  class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block"
+                >
+                  {{ currentRouteLanguage === 'Telugu' ? 'కావలసిన పదార్థాలు' :
+                  'Ingredients' }}:
                 </span>
                 <p class="text-xs text-gray-700 font-medium line-clamp-2">
                   {{ drink.ingredients }}
@@ -664,8 +789,11 @@
               </div>
 
               <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">
-                  {{ currentRouteLanguage === 'Telugu' ? 'వివరణ' : 'Description' }}:
+                <span
+                  class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block"
+                >
+                  {{ currentRouteLanguage === 'Telugu' ? 'వివరణ' : 'Description'
+                  }}:
                 </span>
                 <p class="text-xs text-gray-600 leading-relaxed line-clamp-3">
                   {{ drink.description }}
@@ -674,10 +802,11 @@
               <!-- View Detail Button -->
               <div class="pt-2">
                 <button
-                  (click)="viewNutritionDetail(drink._id)"
+                  (click)="viewNutritionDetail(drink.id)"
                   class="w-full py-2 px-4 bg-[#960000] hover:bg-gray-800 text-white text-xs font-bold rounded-xl transition-colors shadow-sm"
                 >
-                  {{ currentRouteLanguage === 'Telugu' ? 'వివరాలు చూడండి' : 'View Details' }}
+                  {{ currentRouteLanguage === 'Telugu' ? 'వివరాలు చూడండి' :
+                  'View Details' }}
                 </button>
               </div>
             </div>
@@ -700,7 +829,12 @@
           <div
             class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 shrink-0"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -716,7 +850,8 @@
 
       <!-- Modal Message -->
       <p class="text-xs text-gray-600 leading-relaxed">
-        Are you sure you want to permanently delete this product listing from the database?
+        Are you sure you want to permanently delete this product listing from
+        the database?
       </p>
 
       <!-- Modal Actions (Cancel & OK) -->

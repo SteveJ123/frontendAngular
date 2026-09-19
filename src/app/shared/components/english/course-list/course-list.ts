@@ -21,13 +21,13 @@ export class CourseList implements OnInit {
   userRole: string = "admin"; // 'admin' or 'user'
 
   // Edit State Tracking
-  editingCourseId: string | null = null;
+  editingCourseId: any | null = null;
   editData: any = {};
   selectedEditFile: File | null = null;
   editImagePreview: string | null = null;
   courseType = "";
 
-  productToDeleteId: string = "";
+  productToDeleteId: any = "";
   showDeleteModal: boolean = false;
   showDeleteNutritionModal: boolean = false;
   private service = inject(Service);
@@ -102,7 +102,7 @@ export class CourseList implements OnInit {
 
   startEditing(event: Event, course: any): void {
     event.stopPropagation();
-    this.editingCourseId = course._id;
+    this.editingCourseId = Number(course.id);
     this.editData = { ...course };
     this.editImagePreview = course.thumbnail;
     this.selectedEditFile = null;
@@ -192,7 +192,7 @@ export class CourseList implements OnInit {
       };
 
       // 3. Send JSON payload to backend PUT endpoint
-      this.service.updateCourse(course._id, payload).subscribe({
+      this.service.updateCourse(course.id, payload).subscribe({
         next: (res: any) => {
           if (res && res.success) {
             Object.assign(course, res.data);
@@ -242,7 +242,7 @@ export class CourseList implements OnInit {
   // Opens the custom popup dialog
   openDeleteModal(event: any, id: string, courseNutrition: any): void {
     event.stopPropagation();
-    this.productToDeleteId = id;
+    this.productToDeleteId = Number(id);
     if (courseNutrition === "course") {
       this.showDeleteModal = true;
     } else if (courseNutrition === "nutrition") {
@@ -267,7 +267,7 @@ export class CourseList implements OnInit {
           console.log("res", res);
           if (res.success) {
             this.courses = this.courses.filter(
-              (c) => c._id !== this.productToDeleteId,
+              (c) => c.id !== this.productToDeleteId,
             );
             this.toastService.success("Course deleted successfully!");
             this.cancelDelete();

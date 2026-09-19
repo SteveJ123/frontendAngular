@@ -33,18 +33,18 @@ export class Session {
   userRole: string = "user"; // 'admin' or 'user'
   userCourseType: any = "Face Yoga"; // 'Face Yoga' or 'Face Yoga + Raj Yoga'
 
-  sessions: LiveSession[] = [];
-  groupedSessions: { date: string; items: LiveSession[] }[] = [];
+  sessions: any[] = [];
+  groupedSessions: { date: string; items: any[] }[] = [];
 
   activeDropdownId: string | null = null;
   copiedSessionId: string | null = null;
 
   isEditing = false;
-  editingSessionId: string | null = null;
+  editingSessionId: any | null = null;
 
   courseTypes: string[] = ["Face Yoga", "Face Yoga + Raj Yoga"];
 
-  sessionForm: LiveSession = {
+  sessionForm: any = {
     title: "Face Yoga",
     courseType: "Face Yoga",
     date: "",
@@ -55,7 +55,7 @@ export class Session {
     linkTypeNote: "(Zoom Meeting - recurring fixed link)",
     meetingUrl: "",
   };
-  productToDeleteId: string = "";
+  productToDeleteId: any = "";
   showDeleteModal: boolean = false;
 
   constructor() {}
@@ -66,7 +66,9 @@ export class Session {
   private cd = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
 
+  userId: any = "";
   ngOnInit(): void {
+    this.userId = Number(this.authService.getUserId());
     this.userRole = localStorage.getItem("role") || "admin";
     this.userCourseType = this.authService.getUserCourse();
     this.fetchSessions();
@@ -97,7 +99,7 @@ export class Session {
   }
 
   groupSessionsByDate(): void {
-    const groups: { [key: string]: LiveSession[] } = {};
+    const groups: { [key: string]: any[] } = {};
     this.sessions.forEach((session) => {
       if (!groups[session.date]) {
         groups[session.date] = [];
@@ -175,10 +177,10 @@ export class Session {
     }
   }
 
-  startEditing(session: LiveSession, event: Event): void {
+  startEditing(session: any, event: Event): void {
     event.stopPropagation();
     this.isEditing = true;
-    this.editingSessionId = session._id || null;
+    this.editingSessionId = Number(session.id) || null;
 
     // Convert display date string to YYYY-MM-DD format for date input
     let formattedRawDate = new Date().toISOString().split("T")[0];
@@ -251,8 +253,8 @@ export class Session {
   }
 
   // Opens the custom popup dialog
-  openDeleteModal(id: string): void {
-    this.productToDeleteId = id;
+  openDeleteModal(id: any): void {
+    this.productToDeleteId = Number(id);
     this.showDeleteModal = true;
   }
 
