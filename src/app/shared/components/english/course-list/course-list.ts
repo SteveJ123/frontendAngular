@@ -233,10 +233,10 @@ export class CourseList implements OnInit {
     }
   }
 
-  viewCourseDetails(courseId: string): void {
+  viewCourseDetails(courseId: any): void {
     if (this.editingCourseId) return;
     console.log("Navigating to course:", courseId);
-    this.router.navigate(["/en/courses", courseId]);
+    this.router.navigate(["/en/courses", Number(courseId)]);
   }
 
   // Opens the custom popup dialog

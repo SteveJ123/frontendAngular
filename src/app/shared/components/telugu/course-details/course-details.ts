@@ -19,7 +19,7 @@ import { ToastService } from "../../../services/toast.service";
   },
 })
 export class CourseDetails {
-  courseId: string = "";
+  courseId: any = "";
   course: any;
   isLoading: boolean = true;
   isModalOpen: boolean = false;
@@ -33,8 +33,8 @@ export class CourseDetails {
   };
 
   isEditMode: boolean = false;
-  selectedLectureId: string | null = null;
-  productToDeleteId: string = "";
+  selectedLectureId: any | null = null;
+  productToDeleteId: any = "";
   showDeleteModal: boolean = false;
 
   constructor(
@@ -79,7 +79,7 @@ export class CourseDetails {
   openModal(lecture: any = null): void {
     if (lecture) {
       this.isEditMode = true;
-      this.selectedLectureId = lecture._id;
+      this.selectedLectureId = Number(lecture.id);
       this.videoForm.title = lecture.title;
     } else {
       this.isEditMode = false;
@@ -181,9 +181,9 @@ export class CourseDetails {
   }
 
   // Opens the custom popup dialog
-  openDeleteModal(event: any, id: string): void {
+  openDeleteModal(event: any, id: any): void {
     event.stopPropagation();
-    this.productToDeleteId = id;
+    this.productToDeleteId = Number(id);
     this.showDeleteModal = true;
   }
 

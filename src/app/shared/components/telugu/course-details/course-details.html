@@ -1,15 +1,20 @@
 <!-- bg-gray-50 -->
-<div class="min-h-screen bg-[#f3fab5]  p-4 sm:p-6 lg:p-8">
+<div class="min-h-screen bg-[#f3fab5] p-4 sm:p-6 lg:p-8">
   <!-- Container renders when course data is loaded -->
   <div class="max-w-5xl mx-auto space-y-6" *ngIf="course">
     <!-- Top Action Bar for Admin (Disabled if course is missing) -->
     <div *ngIf="userRole === 'admin'" class="flex justify-end">
       <button
         (click)="openModal()"
-        [disabled]="!course?._id"
+        [disabled]="!course?.id"
         class="w-full sm:w-auto px-5 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:bg-gray-300 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer active:scale-98"
       >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -31,32 +36,48 @@
         class="w-full md:w-72 aspect-video object-cover rounded-xl shadow-xs"
       />
       <div class="space-y-2 flex-1 text-center md:text-left">
-        <span class="bg-rose-50 text-rose-700 text-xs font-bold px-2.5 py-1 rounded-md">
+        <span
+          class="bg-rose-50 text-rose-700 text-xs font-bold px-2.5 py-1 rounded-md"
+        >
           {{ course.membershipType || 'General' }}
         </span>
         <h1 class="text-xl sm:text-2xl font-extrabold text-gray-900">
-          {{ course.title === 'Face Yoga' ? 'ఫేస్ యోగా' : 'ఫేస్ యోగా + రాజ్ యోగా' }}
+          {{ course.title === 'Face Yoga' ? 'ఫేస్ యోగా' : 'ఫేస్ యోగా + రాజ్
+          యోగా' }}
         </h1>
-        <p class="text-xs text-gray-500 font-medium">శిక్షకుడు/: {{ course.instructor }}</p>
-        <p class="text-xs text-gray-600 leading-relaxed">{{ course.description }}</p>
+        <p class="text-xs text-gray-500 font-medium">
+          శిక్షకుడు/: {{ course.instructor }}
+        </p>
+        <p class="text-xs text-gray-600 leading-relaxed">
+          {{ course.description }}
+        </p>
       </div>
     </div>
 
     <!-- Course Lectures List -->
-    <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-xs space-y-4">
+    <div
+      class="bg-white rounded-2xl border border-gray-100 p-6 shadow-xs space-y-4"
+    >
       <h2 class="text-base font-bold text-gray-900">
         Course Lectures ({{ course?.lectures?.length || 0 }})
       </h2>
 
       <!-- Available Lectures -->
-      <div class="space-y-3" *ngIf="course?.lectures && course.lectures.length > 0">
+      <div
+        class="space-y-3"
+        *ngIf="course?.lectures && course.lectures.length > 0"
+      >
         <div
           *ngFor="let lecture of course.lectures; let i = index"
           class="p-4 border border-gray-100 rounded-xl flex flex-col items-center justify-between gap-4 bg-gray-50/50 hover:bg-gray-100/50 transition-all"
         >
           <div class="space-y-1">
-            <span class="text-[10px] font-bold text-gray-400">LECTURE 0{{ i + 1 }}</span>
-            <h3 class="text-xs sm:text-sm font-bold text-gray-800">{{ lecture.title }}</h3>
+            <span class="text-[10px] font-bold text-gray-400"
+              >LECTURE 0{{ i + 1 }}</span
+            >
+            <h3 class="text-xs sm:text-sm font-bold text-gray-800">
+              {{ lecture.title }}
+            </h3>
           </div>
 
           <!-- Admin Actions: Edit & Delete -->
@@ -68,7 +89,7 @@
               Edit
             </button>
             <button
-              (click)="openDeleteModal($event, lecture._id)"
+              (click)="openDeleteModal($event, lecture.id)"
               class="px-2.5 py-1 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg transition-all cursor-pointer"
             >
               Delete
@@ -81,7 +102,10 @@
           </div>
 
           <!-- Video Player -->
-          <div class="w-full overflow-hidden rounded-lg bg-black/5" *ngIf="lecture.videoUrl">
+          <div
+            class="w-full overflow-hidden rounded-lg bg-black/5"
+            *ngIf="lecture.videoUrl"
+          >
             <video
               controls
               preload="metadata"
@@ -99,7 +123,9 @@
         *ngIf="!course?.lectures || course.lectures.length === 0"
         class="text-center py-12 border-2 border-dashed border-gray-100 rounded-xl bg-gray-50/30 space-y-3"
       >
-        <p class="text-xs text-gray-400">No video lectures uploaded for this course yet.</p>
+        <p class="text-xs text-gray-400">
+          No video lectures uploaded for this course yet.
+        </p>
         <button
           *ngIf="userRole === 'admin'"
           (click)="openModal()"
@@ -140,7 +166,9 @@
       <!-- Modal Body -->
       <div class="p-6 space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Lecture Title</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1"
+            >Lecture Title</label
+          >
           <input
             type="text"
             [(ngModel)]="videoForm.title"
@@ -150,7 +178,9 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Video File</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1"
+            >Video File</label
+          >
           <!-- <input
             type="file"
             accept="video/*"
@@ -180,7 +210,9 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex justify-end space-x-2">
+      <div
+        class="px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex justify-end space-x-2"
+      >
         <button
           (click)="closeModal()"
           class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-all cursor-pointer"
@@ -210,7 +242,12 @@
           <div
             class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 shrink-0"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -226,7 +263,8 @@
 
       <!-- Modal Message -->
       <p class="text-xs text-gray-600 leading-relaxed">
-        Are you sure you want to permanently delete this product listing from the database?
+        Are you sure you want to permanently delete this product listing from
+        the database?
       </p>
 
       <!-- Modal Actions (Cancel & OK) -->
