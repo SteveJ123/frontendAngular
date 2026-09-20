@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+<div class="min-h-screen bg-[#f3fab5] p-4 sm:p-6 lg:p-8">
   <!-- Container renders when course data is loaded -->
   <div class="max-w-5xl mx-auto space-y-6" *ngIf="course">
     <!-- Top Action Bar for Admin (Disabled if course is missing) -->
@@ -6,7 +6,7 @@
       <button
         (click)="openModal()"
         [disabled]="!course?.id"
-        class="w-full sm:w-auto px-5 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:bg-gray-300 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer active:scale-98"
+        class="w-full sm:w-auto px-5 py-2.5 bg-[#960000] disabled:bg-gray-300 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer active:scale-98"
       >
         <svg
           class="w-4 h-4"
@@ -27,7 +27,7 @@
 
     <!-- Course Banner Header -->
     <div
-      class="bg-white rounded-2xl border border-gray-100 p-6 shadow-xs flex flex-col md:flex-row gap-6 items-center"
+      class="bg-[#f3fab5] rounded-2xl border border-gray-100 p-6 shadow-xs flex flex-col md:flex-row gap-6 items-center"
     >
       <img
         [src]="course.thumbnail"
@@ -54,7 +54,7 @@
 
     <!-- Course Lectures List -->
     <div
-      class="bg-white rounded-2xl border border-gray-100 p-6 shadow-xs space-y-4"
+      class="bg-[#f3fab5] rounded-2xl border border-gray-100 p-6 shadow-xs space-y-4"
     >
       <h2 class="text-base font-bold text-gray-900">
         Course Lectures ({{ course?.lectures?.length || 0 }})
@@ -146,11 +146,11 @@
     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs"
   >
     <div
-      class="bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-md overflow-hidden"
+      class="bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-100 w-full max-w-md overflow-hidden"
     >
       <!-- Modal Header -->
       <div
-        class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50"
+        class="px-6 py-4 border-b bg-[#f3fab5] flex items-center justify-between"
       >
         <h3 class="text-sm font-bold text-gray-900">Add New Video Lecture</h3>
         <button
@@ -183,7 +183,7 @@
             type="file"
             accept="video/*"
             (change)="onFileSelected($event)"
-            class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-xl bg-white text-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 cursor-pointer outline-none"
+            class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-xl bg-[#f3fab5] text-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 cursor-pointer outline-none"
           /> -->
           <input
             type="text"
@@ -209,7 +209,7 @@
 
       <!-- Modal Footer -->
       <div
-        class="px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex justify-end space-x-2"
+        class="px-6 py-3 border-t border-gray-100 bg-[#f3fab5] flex justify-end space-x-2"
       >
         <button
           (click)="closeModal()"
@@ -232,7 +232,7 @@
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity animate-fadeIn"
   >
     <div
-      class="bg-white rounded-2xl shadow-xl border border-gray-100 max-w-sm w-full p-6 space-y-4 transform transition-all scale-100"
+      class="bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-100 max-w-sm w-full p-6 space-y-4 transform transition-all scale-100"
     >
       <!-- Modal Header & Icon -->
       <div class="flex items-center justify-center gap-3">

@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 // import { SidebarService } from "../../services/sidebar.service";
 import { NavigationEnd, Router, RouterModule } from "@angular/router";
-import { SafeHtmlPipe } from "../../pipe/safe-html.pipe";
+// import { SafeHtmlPipe } from "../../pipe/safe-html.pipe";
 // import { SidebarWidgetComponent } from "./app-sidebar-widget.component";
 import { combineLatest, filter, Subscription } from "rxjs";
 import { AuthService } from "../../services/AuthService";
@@ -26,7 +26,7 @@ type NavItem = {
 
 @Component({
   selector: "app-sidebar",
-  imports: [CommonModule, RouterModule, SafeHtmlPipe],
+  imports: [CommonModule, RouterModule],
   templateUrl: "./app-sidebar.component.html",
 })
 export class AppSidebarComponent {

@@ -517,11 +517,11 @@ export class Service {
     return this.http.post(`${this.apiUrl}events`, formData);
   }
 
-  updateEvent(id: string, formData: FormData): Observable<any> {
+  updateEvent(id: any, formData: FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}events/${id}`, formData);
   }
 
-  deleteEvent(id: string): Observable<any> {
+  deleteEvent(id: any): Observable<any> {
     return this.http.delete(`${this.apiUrl}events/${id}`);
   }
 

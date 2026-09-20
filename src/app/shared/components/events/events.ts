@@ -23,7 +23,7 @@ export class Events {
   title: string = "";
   selectedFile: File | null = null;
   imagePreviewUrl: string | null = null;
-  editingEventId: string | null = null;
+  editingEventId: any | null = null;
 
   errorMessage: string = "";
 
@@ -144,7 +144,7 @@ export class Events {
   }
 
   editEvent(event: any): void {
-    this.editingEventId = event._id!;
+    this.editingEventId = Number(event.id!);
     this.title = event.title;
     console.log("event", event);
     // Option A: Strip all leading slashes using regex (Recommended)
@@ -185,13 +185,14 @@ export class Events {
 
   openDeleteModal(id: any): void {
     // this.activeMenuPostId = null;
-    this.productToDeleteId = id;
+    this.productToDeleteId = Number(id);
     this.showDeleteModal = true;
   }
 
   cancelDelete(): void {
     this.showDeleteModal = false;
     this.productToDeleteId = "";
+    this.cdr.detectChanges();
   }
 
   confirmDelete(): void {

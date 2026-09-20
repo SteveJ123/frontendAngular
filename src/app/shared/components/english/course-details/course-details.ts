@@ -96,6 +96,7 @@ export class CourseDetails {
     this.selectedLectureId = null;
     this.selectedVideoFile = null;
     this.videoForm = { title: "", videoUrl: "" };
+    this.cd.detectChanges();
   }
 
   onFileSelected(event: Event): void {
