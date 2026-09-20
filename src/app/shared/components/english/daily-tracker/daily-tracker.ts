@@ -48,7 +48,7 @@ export class DailyTracker implements OnInit {
   view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
 
-  userId: string = "";
+  userId: any = "";
   points: number = 0;
   completedDates: string[] = []; // Contains array of strings like ['2026-08-01', '2026-08-31']
 
@@ -86,13 +86,15 @@ export class DailyTracker implements OnInit {
   id: any = "";
   dailyTrackerUsername: any = "";
   ngOnInit(): void {
-    this.userId = localStorage.getItem("userId") || "";
+    this.userId = Number(localStorage.getItem("userId")) || "";
     // 1. Get the 'id' parameter from the URL snapshot or paramMap
-    this.id = this.route.snapshot.paramMap.get("id");
+    this.id = Number(this.route.snapshot.paramMap.get("id"));
 
     if (this.id) {
       this.fetchTrackerStatus(this.id);
       this.dailyTrackerUsername = localStorage.getItem("dailyTrackerUsername");
+      this.isTodayCompleted = true;
+      this.cd.detectChanges();
     } else {
       this.fetchTrackerStatus(this.userId);
     }

@@ -140,6 +140,7 @@ export class EditProfile {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
 
+    this.isUploading = true;
     const file = input.files[0];
     let fileLink: any = "";
     try {
@@ -163,6 +164,7 @@ export class EditProfile {
       this.toastService.error("Post Not Created Successfully");
     } finally {
       this.isUploading = false;
+      this.cd.detectChanges();
     }
 
     const endTime = new Date();
@@ -185,12 +187,14 @@ export class EditProfile {
             this.profileImage = path;
           }
           this.isUploading = false;
+          this.cd.detectChanges();
           this.toastService.success("Profile Image updated successfully!");
           // window.location.reload();
         },
         error: (err) => {
           console.error("Failed to upload image:", err);
           this.isUploading = false;
+          this.cd.detectChanges();
           this.toastService.error("Profile Image Not updated successfully!");
         },
       });
@@ -208,10 +212,12 @@ export class EditProfile {
           }
           this.isUploading = false;
           // window.location.reload();
+          this.cd.detectChanges();
         },
         error: (err) => {
           console.error("Image upload failed:", err);
           this.isUploading = false;
+          this.cd.detectChanges();
           this.toastService.error("Profile Image Not Uploaded Succcessfully!");
         },
       });

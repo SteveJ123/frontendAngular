@@ -1,12 +1,18 @@
-<div class="min-h-screen bg-[#f3fab5] p-4 sm:p-6 md:p-10 flex flex-col items-center">
+<div
+  class="min-h-screen bg-[#f3fab5] p-4 sm:p-6 md:p-10 flex flex-col items-center"
+>
   <div class="w-full max-w-4xl space-y-8">
     <!-- Top Greeting & Avatar Card -->
     <div
       class="bg-white rounded-2xl p-5 border border-gray-200/80 shadow-sm w-full max-w-sm flex items-center justify-between"
     >
       <div>
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">హలో,</h2>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">
+          హలో,
+        </h2>
+        <h1
+          class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight"
+        >
           {{ userName }}
         </h1>
       </div>
@@ -17,7 +23,10 @@
           class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-500 flex items-center justify-center"
         >
           <!-- Avatar with Camera Overlay -->
-          <div class="relative cursor-pointer group" (click)="fileInput.click()">
+          <div
+            class="relative cursor-pointer group"
+            (click)="fileInput.click()"
+          >
             <!-- Hidden File Input -->
             <input
               #fileInput
@@ -32,6 +41,7 @@
               class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-500 flex items-center justify-center overflow-hidden border border-gray-200"
             >
               <!-- Render uploaded profile image if available -->
+
               <img
                 *ngIf="profileImage; else defaultAvatar"
                 [src]="profileImage"
@@ -111,7 +121,10 @@
         class="bg-white rounded-2xl p-5 border border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 cursor-pointer transition-all duration-200 flex flex-col justify-between group h-36"
       >
         <!-- Icon & Arrow Row -->
-        <div class="flex items-center justify-between" *ngIf="option.role.includes(userRole)">
+        <div
+          class="flex items-center justify-between"
+          *ngIf="option.role.includes(userRole)"
+        >
           <div
             class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700"
           >
@@ -212,10 +225,14 @@
           (click)="navigateToOption(option)"
           *ngIf="option.role.includes(userRole)"
         >
-          <h3 class="text-base font-bold text-gray-900 group-hover:text-black leading-snug">
+          <h3
+            class="text-base font-bold text-gray-900 group-hover:text-black leading-snug"
+          >
             {{ option.title }}
           </h3>
-          <p class="text-xs text-gray-400 font-medium leading-relaxed line-clamp-2">
+          <p
+            class="text-xs text-gray-400 font-medium leading-relaxed line-clamp-2"
+          >
             {{ option.description }}
           </p>
         </div>
@@ -249,5 +266,50 @@
       </button>
     </div>
     -->
+  </div>
+</div>
+<div class="profile-image-container position-relative">
+  <!-- Spinner Overlay while uploading -->
+  <div
+    *ngIf="isUploading"
+    class="spinner-overlay d-flex align-items-center justify-content-center"
+  >
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Uploading...</span>
+    </div>
+  </div>
+
+  <!-- Profile Image Preview -->
+  <img
+    [src]="profileImage || 'assets/default-avatar.png'"
+    alt="Profile Image"
+    class="profile-avatar"
+  />
+
+  <!-- File Input -->
+  <input
+    type="file"
+    (change)="onFileSelected($event)"
+    accept="image/*"
+    [disabled]="isUploading"
+  />
+</div>
+
+<div
+  *ngIf="isUploading"
+  class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+>
+  <div
+    class="flex flex-col items-center gap-4 rounded-xl bg-[#f3fab5] p-6 shadow-2xl border border-slate-800"
+  >
+    <!-- Animated Spinner -->
+    <div
+      class="h-12 w-12 animate-spin rounded-full border-4 border-slate-600 border-t-blue-500"
+    ></div>
+
+    <!-- Message Text -->
+    <p class="text-sm font-medium tracking-wide text-black-200">
+      ప్రతిబింబం అప్‌లోడ్ చేస్తోంది
+    </p>
   </div>
 </div>
