@@ -1,25 +1,33 @@
-<div class="min-h-screen bg-[#f3fab5] p-4 sm:p-8 md:p-12 font-sans">
+<div class="min-h-screen bg-gray-50/30 p-4 sm:p-8 md:p-12 font-sans">
   <div class="max-w-6xl mx-auto space-y-8">
     <!-- Breadcrumbs & Heading -->
     <div class="space-y-3">
-      <nav class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 font-medium">
+      <nav
+        class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 font-medium"
+      >
         <span (click)="navigateToMyAccount()"> ఖాతా</span>
         <span>&gt;</span>
         <span class="text-gray-900 font-semibold">వ్యక్తిగత వివరాలు</span>
       </nav>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+      <h1
+        class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight"
+      >
         Personal details
       </h1>
     </div>
 
     <!-- Main Content Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start pt-4">
+    <div
+      class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start pt-4"
+    >
       <!-- Left Side: Editable List Form -->
       <div class="lg:col-span-7 divide-y divide-gray-100">
         <!-- Name Row -->
         <div class="py-5 first:pt-0">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-xs sm:text-sm font-semibold text-gray-500">పేరు</span>
+            <span class="text-xs sm:text-sm font-semibold text-gray-500"
+              >పేరు</span
+            >
             <button
               type="button"
               (click)="toggleEdit('name')"
@@ -30,7 +38,10 @@
           </div>
 
           <!-- Display Mode -->
-          <div *ngIf="editingField !== 'name'" class="text-base sm:text-lg font-bold text-gray-900">
+          <div
+            *ngIf="editingField !== 'name'"
+            class="text-base sm:text-lg font-bold text-gray-900"
+          >
             {{ details.name || 'తెలపలేదు' }}
           </div>
 
@@ -54,7 +65,9 @@
         <!-- About You Row -->
         <div class="py-5">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-xs sm:text-sm font-semibold text-gray-500">మీ గురించి</span>
+            <span class="text-xs sm:text-sm font-semibold text-gray-500"
+              >మీ గురించి</span
+            >
             <button
               type="button"
               (click)="toggleEdit('aboutYou')"
@@ -110,15 +123,9 @@
             *ngIf="editingField !== 'gender'"
             class="text-base sm:text-lg font-bold text-gray-900"
           >
-            {{
-              details.gender === 'Male'
-                ? 'పురుషుడు'
-                : details.gender === 'Female'
-                  ? 'స్త్రీ'
-                  : details.gender === 'Other'
-                    ? 'ఇతర'
-                    : 'తెలపలేదు'
-            }}
+            {{ details.gender === 'Male' ? 'పురుషుడు' : details.gender ===
+            'Female' ? 'స్త్రీ' : details.gender === 'Other' ? 'ఇతర' :
+            'తెలపలేదు' }}
           </div>
 
           <!-- Edit Mode -->
@@ -145,7 +152,9 @@
         <!-- Birthday Row -->
         <div class="py-5">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-xs sm:text-sm font-semibold text-gray-500">పుట్టినరోజు</span>
+            <span class="text-xs sm:text-sm font-semibold text-gray-500"
+              >పుట్టినరోజు</span
+            >
             <button
               type="button"
               (click)="toggleEdit('birthday')"
@@ -183,7 +192,7 @@
 
       <!-- Right Side Info Card -->
       <div
-        class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-gray-200/80 shadow-xs space-y-4"
+        class="lg:col-span-5 bg-[#f3fab5] p-6 sm:p-8 rounded-3xl border border-gray-200/80 shadow-xs space-y-4"
       >
         <!-- Question Icon Circle -->
         <div
@@ -192,11 +201,14 @@
           ?
         </div>
 
-        <h3 class="text-lg sm:text-xl font-bold text-gray-900">Personal details</h3>
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900">
+          Personal details
+        </h3>
 
         <p class="text-xs sm:text-sm text-gray-500 leading-relaxed">
-          You can add your personal information here so that we can get to know you better. Only
-          your name, picture and the 'about you' section will be visible to your audience!
+          You can add your personal information here so that we can get to know
+          you better. Only your name, picture and the 'about you' section will
+          be visible to your audience!
         </p>
       </div>
     </div>

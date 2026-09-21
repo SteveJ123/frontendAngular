@@ -30,12 +30,12 @@ export class SupportTeam {
   private toastService = inject(ToastService);
   private cd = inject(ChangeDetectorRef);
   private service = inject(Service);
-  supportTeam = signal<SupportMember[]>([]);
+  supportTeam = signal<any[]>([]);
   isModalOpen = false;
   isEditing = false;
 
-  formData: SupportMember = this.getEmptyForm();
-  productToDeleteId: string = "";
+  formData: any = this.getEmptyForm();
+  productToDeleteId: any = "";
   showDeleteModal: boolean = false;
   constructor(private http: HttpClient) {}
 
@@ -50,7 +50,7 @@ export class SupportTeam {
     this.fetchTeam();
   }
 
-  getEmptyForm(): SupportMember {
+  getEmptyForm(): any {
     return {
       name: "",
       role: "",
@@ -62,9 +62,12 @@ export class SupportTeam {
   }
 
   fetchTeam(): void {
-    // this.http.get<{ success: boolean; data: SupportMember[] }>(this.apiUrl)
+    // this.http.get<{ success: boolean; data: any[] }>(this.apiUrl)
     this.service.getSupportTeam(this.currentRouteLanguage).subscribe({
-      next: (res: any) => this.supportTeam.set(res.data),
+      next: (res: any) => {
+        console.log("res.data support", res.data);
+        this.supportTeam.set(res.data);
+      },
       error: (err: any) => console.error(err),
     });
   }
@@ -75,7 +78,7 @@ export class SupportTeam {
     this.isModalOpen = true;
   }
 
-  openEditModal(person: SupportMember): void {
+  openEditModal(person: any): void {
     this.formData = { ...person };
     this.isEditing = true;
     this.isModalOpen = true;
@@ -90,11 +93,13 @@ export class SupportTeam {
       ...this.formData,
       language: this.currentRouteLanguage,
     };
-    if (this.isEditing && this.formData._id) {
-      this.service.updateMember(this.formData._id, payload).subscribe({
+    if (this.isEditing && this.formData.id) {
+      this.service.updateMember(this.formData.id, payload).subscribe({
         next: (res: any) => {
           this.supportTeam.update((list) =>
-            list.map((item) => (item._id === res.data._id ? res.data : item)),
+            list.map((item: any) =>
+              item.id === res.data.id ? res.data : item,
+            ),
           );
           this.closeModal();
           this.cancelDelete();
@@ -124,8 +129,8 @@ export class SupportTeam {
   }
 
   // Opens the custom popup dialog
-  openDeleteModal(id: string): void {
-    this.productToDeleteId = id;
+  openDeleteModal(id: any): void {
+    this.productToDeleteId = Number(id);
     this.showDeleteModal = true;
   }
 
@@ -143,7 +148,7 @@ export class SupportTeam {
     this.service.deleteMember(this.productToDeleteId).subscribe({
       next: () => {
         this.supportTeam.update((list) =>
-          list.filter((item) => item._id !== this.productToDeleteId),
+          list.filter((item: any) => item.id !== this.productToDeleteId),
         );
         this.toastService.success("Support deleted successfully!");
         this.cancelDelete();

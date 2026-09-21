@@ -230,7 +230,7 @@ export class AppHeaderComponent {
 
     // Check if commentId exists, or if postModel indicates an AdminPost comment
     const isComment =
-      !!notification.commentId._id || notification.postModel === "AdminPost";
+      !!notification?.commentId?._id || notification.postModel === "AdminPost";
 
     if (isComment) {
       const targetPostId =

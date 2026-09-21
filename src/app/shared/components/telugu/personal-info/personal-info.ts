@@ -30,8 +30,8 @@ export class PersonalInfo {
   private toastService = inject(ToastService);
   private cd = inject(ChangeDetectorRef);
   private service = inject(Service);
-  userId: string = "";
-  details: PersonalDetails = {
+  userId: any = "";
+  details: any = {
     userId: "",
     name: "",
     aboutYou: "",
@@ -55,7 +55,7 @@ export class PersonalInfo {
     return urlSegments[0] === "te" ? "Telugu" : "English";
   }
   ngOnInit(): void {
-    this.userId = localStorage.getItem("userId") || "";
+    this.userId = Number(localStorage.getItem("userId")) || "";
     this.currentLanguage = this.authService.getUserLanguage();
     this.currentRoute = this.currentLanguage === "English" ? "en" : "te";
     this.details.userId = localStorage.getItem("userId") || "";
@@ -110,6 +110,7 @@ export class PersonalInfo {
               `${this.editingField} field updated successfully!`,
             );
             this.editingField = null;
+            this.cd.detectChanges();
           }
         },
         error: (err) => {
