@@ -12,6 +12,7 @@ import { AuthService } from "../../../services/AuthService";
 import { HttpClient } from "@angular/common/http";
 import { ToastService } from "../../../services/toast.service";
 import { apiUrl } from "../../../core/constants/api";
+import { Service } from "../../../services/service";
 
 export interface UserData {
   _id: string;
@@ -47,10 +48,11 @@ export class Team implements OnInit {
   editingUser: any = {};
 
   private api = `${apiUrl}api/registered-users`;
-  productToDeleteId: string = "";
+  productToDeleteId: any = "";
   showDeleteModal: boolean = false;
   constructor(private http: HttpClient) {}
   private cd = inject(ChangeDetectorRef);
+  private service = inject(Service);
   private toastService = inject(ToastService);
 
   ngOnInit(): void {
@@ -58,7 +60,8 @@ export class Team implements OnInit {
   }
 
   fetchUsers(): void {
-    this.http.get<any[]>(this.api).subscribe({
+    // this.http.get<any[]>(this.api)
+    this.service.fetchUsers().subscribe({
       next: (data: any) => {
         console.log("data", data);
         this.users = data?.data;
@@ -150,41 +153,41 @@ export class Team implements OnInit {
   // }
 
   saveUser(): void {
-    const userId = this.editingUser?._id;
+    const userId = this.editingUser?.id;
     if (!userId) return;
 
-    this.http
-      .put<{
-        success: boolean;
-        message: string;
-        data: any;
-      }>(`${this.api}/${userId}`, this.editingUser)
-      .subscribe({
-        next: (response) => {
-          // Extract the updated user from the API response payload
-          const updatedUser = response.data;
+    // this.http
+    //   .put<{
+    //     success: boolean;
+    //     message: string;
+    //     data: any;
+    //   }>(`${this.api}/${userId}`, this.editingUser)
 
-          // Update the users array immutably so Angular detects the change immediately
-          this.users = this.users.map((u) =>
-            u._id === updatedUser._id ? updatedUser : u,
-          );
+    this.service.updateUser(userId, this.editingUser).subscribe({
+      next: (response) => {
+        // Extract the updated user from the API response payload
+        const updatedUser = response.data;
 
-          // Re-apply filter rules to update table data and recalculate pagination
-          this.applyFilters();
+        // Update the users array immutably so Angular detects the change immediately
+        this.users = this.users.map((u) =>
+          u.id === updatedUser.id ? updatedUser : u,
+        );
 
-          this.closeModal();
-          this.cd.markForCheck(); // Preferred over detectChanges for OnPush components
-          this.toastService.success("User updated successfully");
-        },
-        error: (err) => {
-          console.error("Failed to update user:", err);
-          this.closeModal();
-          this.cd.markForCheck();
-          this.toastService.error(
-            err.error?.message || "Failed to update user",
-          );
-        },
-      });
+        // Re-apply filter rules to update table data and recalculate pagination
+        this.applyFilters();
+        this.closeModal();
+        this.cd.detectChanges();
+        this.cd.markForCheck(); // Preferred over detectChanges for OnPush components
+        this.toastService.success("User updated successfully");
+      },
+      error: (err) => {
+        console.error("Failed to update user:", err);
+        this.closeModal();
+        this.cd.markForCheck();
+        this.cd.detectChanges();
+        this.toastService.error(err.error?.message || "Failed to update user");
+      },
+    });
   }
   // deleteUser(userId: string): void {
   //   if (confirm('Are you sure you want to delete this user?')) {
@@ -193,8 +196,8 @@ export class Team implements OnInit {
   // }
 
   // Opens the custom popup dialog
-  openDeleteModal(id: string): void {
-    this.productToDeleteId = id;
+  openDeleteModal(id: any): void {
+    this.productToDeleteId = Number(id);
     this.showDeleteModal = true;
   }
 
@@ -207,9 +210,10 @@ export class Team implements OnInit {
   // Executed when "OK" / "Delete" is pressed in the modal
   confirmDelete(): void {
     if (!this.productToDeleteId) return;
-    this.http.delete(`${this.api}/${this.productToDeleteId}`).subscribe({
+    // this.http.delete(`${this.api}/${this.productToDeleteId}`)
+    this.service.deleteUser(this.productToDeleteId).subscribe({
       next: () => {
-        this.users = this.users.filter((u) => u._id !== this.productToDeleteId);
+        this.users = this.users.filter((u) => u.id !== this.productToDeleteId);
         this.applyFilters();
         this.cancelDelete();
         this.cd.detectChanges();

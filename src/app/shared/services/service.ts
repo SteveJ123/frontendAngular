@@ -596,4 +596,16 @@ export class Service {
       `${this.apiUrl}nutrition/${id}`,
     );
   }
+
+  fetchUsers() {
+    return this.http.get<any>(`${this.apiUrl}registered-users`);
+  }
+
+  updateUser(userId: any, item: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}registered-users/${userId}`, item);
+  }
+
+  deleteUser(id: any): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}registered-users/${id}`);
+  }
 }

@@ -60,7 +60,10 @@ export class SupportTeam {
   fetchTeam(): void {
     this.http.get<{ success: boolean; data: any[] }>(this.apiUrl);
     this.service.getSupportTeam(this.currentRouteLanguage).subscribe({
-      next: (res) => this.supportTeam.set(res.data),
+      next: (res) => {
+        console.log("res", res);
+        this.supportTeam.set(res.data);
+      },
       error: (err) => console.error(err),
     });
   }
