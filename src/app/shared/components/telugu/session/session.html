@@ -178,7 +178,7 @@
 
             <!-- 3 Dots Options Button -->
             <button
-              (click)="toggleDropdown(session._id!, $event)"
+              (click)="toggleDropdown(session.id!, $event)"
               class="p-2 bg-[#EAECEF] hover:bg-gray-300 text-gray-700 rounded-lg transition-colors"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -190,13 +190,13 @@
 
             <!-- Dropdown Options Menu -->
             <div
-              *ngIf="activeDropdownId === session._id"
+              *ngIf="activeDropdownId === session.id"
               class="absolute right-0 top-11 bg-[#f3fab5] border border-gray-100 shadow-xl rounded-xl py-1 w-44 z-20"
             >
               <!-- Copy Link -->
               <button
                 *ngIf="userRole === 'admin'"
-                (click)="copyLink(session.meetingUrl, session._id!, $event)"
+                (click)="copyLink(session.meetingUrl, session.id!, $event)"
                 class="w-full text-left px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2"
               >
                 <svg
@@ -213,7 +213,7 @@
                   />
                 </svg>
                 <span
-                  >{{ copiedSessionId === session._id ? 'Copied!' : 'Copy Link'
+                  >{{ copiedSessionId === session.id ? 'Copied!' : 'Copy Link'
                   }}</span
                 >
               </button>

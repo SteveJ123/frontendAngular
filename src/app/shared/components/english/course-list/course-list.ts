@@ -480,10 +480,10 @@ export class CourseList implements OnInit {
 
     this.isNutritionSubmitting = true;
 
-    if (this.isEditingNutrition && this.nutritionForm._id) {
+    if (this.isEditingNutrition && this.nutritionForm.id) {
       // UPDATE
       this.service
-        .updateNutritionItem(this.nutritionForm._id, this.nutritionForm)
+        .updateNutritionItem(this.nutritionForm.id, this.nutritionForm)
         .subscribe({
           next: () => {
             this.resetNutritionForm();

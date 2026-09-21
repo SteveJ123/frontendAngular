@@ -149,6 +149,7 @@ export class Session {
           if (res.success) {
             this.fetchSessions();
             this.resetForm();
+            this.isEditing = false;
             this.cd.detectChanges();
             this.toastService.success("Session updated successfully!");
           }

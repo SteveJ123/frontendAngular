@@ -36,8 +36,8 @@ export class Session {
   sessions: any[] = [];
   groupedSessions: { date: string; items: any[] }[] = [];
 
-  activeDropdownId: string | null = null;
-  copiedSessionId: string | null = null;
+  activeDropdownId: any | null = null;
+  copiedSessionId: any | null = null;
 
   isEditing = false;
   editingSessionId: any | null = null;
@@ -151,6 +151,7 @@ export class Session {
           if (res.success) {
             this.fetchSessions();
             this.resetForm();
+            this.isEditing = false;
             this.cd.detectChanges();
             this.toastService.success("Session updated successfully!");
           }
@@ -234,15 +235,22 @@ export class Session {
   //   }
   // }
 
-  toggleDropdown(id: string, event: Event): void {
+  toggleDropdown(id: any, event: Event): void {
+    console.log("id", id);
+    console.log(
+      "type of id",
+      this.activeDropdownId,
+      typeof this.activeDropdownId,
+      typeof id,
+    );
     event.stopPropagation();
     this.activeDropdownId = this.activeDropdownId === id ? null : id;
   }
 
-  copyLink(meetingUrl: string, id: string, event: Event): void {
+  copyLink(meetingUrl: string, id: any, event: Event): void {
     event.stopPropagation();
     navigator.clipboard.writeText(meetingUrl).then(() => {
-      this.copiedSessionId = id;
+      this.copiedSessionId = Number(id);
       setTimeout(() => {
         this.copiedSessionId = null;
         this.activeDropdownId = null;
