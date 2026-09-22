@@ -1,5 +1,7 @@
 <!-- py-12 -->
-<div class="flex min-h-full flex-col justify-center px-6 lg:px-8 bg-[#f3fab5] min-h-screen">
+<div
+  class="flex min-h-full flex-col justify-center px-6 lg:px-8 bg-[#f3fab5] min-h-screen"
+>
   <!-- <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <img
       src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
@@ -12,10 +14,17 @@
   </div> -->
   <!-- mt-10 -->
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <form (ngSubmit)="onRegister(registerForm)" #registerForm="ngForm" class="space-y-6" novalidate>
+    <form
+      (ngSubmit)="onRegister(registerForm)"
+      #registerForm="ngForm"
+      class="space-y-6"
+      novalidate
+    >
       <!-- Username Field -->
       <div>
-        <label for="username" class="block text-sm font-medium text-[#960000]">User Name</label>
+        <label for="username" class="block text-sm font-medium text-[#960000]"
+          >User Name</label
+        >
         <div class="mt-2">
           <input
             id="username"
@@ -28,13 +37,16 @@
             class="block w-full rounded-md px-3 py-2 text-base text-black border border-gray-700 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
           />
         </div>
-        @if (usernameInput.invalid && (usernameInput.touched || registerForm.submitted)) {
-          <p class="mt-1.5 text-xs text-red-500">Username is required.</p>
+        @if (usernameInput.invalid && (usernameInput.touched ||
+        registerForm.submitted)) {
+        <p class="mt-1.5 text-xs text-red-500">Username is required.</p>
         }
       </div>
       <!-- Mobile Field -->
       <div>
-        <label for="mobile" class="block text-sm font-medium text-[#960000]">Mobile Number</label>
+        <label for="mobile" class="block text-sm font-medium text-[#960000]"
+          >Mobile Number</label
+        >
         <div class="mt-2">
           <input
             id="mobile"
@@ -49,13 +61,14 @@
           />
         </div>
         <!-- Mobile Validation Errors -->
-        @if (mobileInput.invalid && (mobileInput.touched || registerForm.submitted)) {
-          @if (mobileInput.errors?.['required']) {
-            <p class="mt-1.5 text-xs text-red-400">Mobile number is required.</p>
-          } @else if (mobileInput.errors?.['pattern']) {
-            <p class="mt-1.5 text-xs text-red-400">Please enter a valid 10-digit mobile number.</p>
-          }
-        }
+        @if (mobileInput.invalid && (mobileInput.touched ||
+        registerForm.submitted)) { @if (mobileInput.errors?.['required']) {
+        <p class="mt-1.5 text-xs text-red-400">Mobile number is required.</p>
+        } @else if (mobileInput.errors?.['pattern']) {
+        <p class="mt-1.5 text-xs text-red-400">
+          Please enter a valid 10-digit mobile number.
+        </p>
+        } }
       </div>
 
       <!-- Yoga Type Dropdown Field -->
@@ -72,14 +85,17 @@
             [(ngModel)]="formData.courseType"
             class="block w-full rounded-md px-3 py-2 text-base text-black border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm cursor-pointer"
           >
-            <option [ngValue]="'Face Yoga'" class="bg-[#f3fab5]">Face Yoga</option>
+            <option [ngValue]="'Face Yoga'" class="bg-[#f3fab5]">
+              Face Yoga
+            </option>
             <option [ngValue]="'Face Yoga + Raj Yoga'" class="bg-[#f3fab5]">
               Face Yoga + Raj Yoga
             </option>
           </select>
         </div>
-        @if (courseTypeInput.invalid && (courseTypeInput.touched || registerForm.submitted)) {
-          <p class="mt-1.5 text-xs text-red-500">Please select a yoga option.</p>
+        @if (courseTypeInput.invalid && (courseTypeInput.touched ||
+        registerForm.submitted)) {
+        <p class="mt-1.5 text-xs text-red-500">Please select a yoga option.</p>
         }
       </div>
       <div>
@@ -96,14 +112,19 @@
             <option [ngValue]="'Telugu'" class="bg-[#f3fab5]">Telugu</option>
           </select>
         </div>
-        @if (languageTypeInput.invalid && (languageTypeInput.touched || registerForm.submitted)) {
-          <p class="mt-1.5 text-xs text-red-500">Please select a language option.</p>
+        @if (languageTypeInput.invalid && (languageTypeInput.touched ||
+        registerForm.submitted)) {
+        <p class="mt-1.5 text-xs text-red-500">
+          Please select a language option.
+        </p>
         }
       </div>
 
       <!-- Password Field -->
       <div>
-        <label for="password" class="block text-sm font-medium text-[#960000]">Password</label>
+        <label for="password" class="block text-sm font-medium text-[#960000]"
+          >Password</label
+        >
         <div class="mt-2">
           <input
             id="password"
@@ -117,8 +138,9 @@
           />
         </div>
         <!-- Password Required Validation -->
-        @if (passwordInput.invalid && (passwordInput.touched || registerForm.submitted)) {
-          <p class="mt-1.5 text-xs text-red-400">Password is required.</p>
+        @if (passwordInput.invalid && (passwordInput.touched ||
+        registerForm.submitted)) {
+        <p class="mt-1.5 text-xs text-red-400">Password is required.</p>
         }
       </div>
 
@@ -140,15 +162,17 @@
           />
         </div>
         <!-- Retype Password & Mismatch Errors -->
-        @if (repasswordInput.invalid && (repasswordInput.touched || registerForm.submitted)) {
-          <p class="mt-1.5 text-xs text-red-400">Please retype your password.</p>
-        } @else if (
-          formData.password !== formData.repassword &&
-          (repasswordInput.touched || registerForm.submitted)
-        ) {
-          <p class="mt-1.5 text-xs text-red-400">Passwords do not match.</p>
+        @if (repasswordInput.invalid && (repasswordInput.touched ||
+        registerForm.submitted)) {
+        <p class="mt-1.5 text-xs text-red-400">Please retype your password.</p>
+        } @else if ( formData.password !== formData.repassword &&
+        (repasswordInput.touched || registerForm.submitted) ) {
+        <p class="mt-1.5 text-xs text-red-400">Passwords do not match.</p>
         }
       </div>
+      @if(error){
+      <p class="mt-1.5 text-xs text-red-400">{{error.error.message}}</p>
+      }
 
       <!-- Submit Button -->
       <div>
@@ -167,5 +191,21 @@
         >Login here</a
       >
     </p> -->
+  </div>
+</div>
+<div
+  *ngIf="isLoading"
+  class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+>
+  <div
+    class="flex flex-col items-center gap-4 rounded-xl bg-[#f3fab5] p-6 shadow-2xl border border-slate-800"
+  >
+    <!-- Animated Spinner -->
+    <div
+      class="h-12 w-12 animate-spin rounded-full border-4 border-slate-600 border-t-blue-500"
+    ></div>
+
+    <!-- Message Text -->
+    <p class="text-sm font-medium tracking-wide text-black-200">Processing</p>
   </div>
 </div>

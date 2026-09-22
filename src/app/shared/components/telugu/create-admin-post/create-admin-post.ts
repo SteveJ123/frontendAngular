@@ -166,7 +166,7 @@ export class CreateAdminPost {
   posts$!: Observable<any[]>;
   cachedPosts: any[] = [];
   // Track viewed posts during the session to avoid duplicate API calls
-  productToDeleteId: string = "";
+  productToDeleteId: any = "";
   showDeleteModal: boolean = false;
   constructor() {}
 
@@ -976,6 +976,7 @@ export class CreateAdminPost {
       this.toastService.error("Post Not Created Successfully");
     } finally {
       this.isUploading = false;
+      this.cd.detectChanges();
     }
   }
 
@@ -1421,10 +1422,11 @@ export class CreateAdminPost {
       this.toastService.error("Post Not Updated Successfully!");
     } finally {
       this.isUploading = false;
+      this.cd.detectChanges();
     }
   }
 
-  deletePost(postId: string): void {
+  deletePost(postId: any): void {
     if (
       confirm("Are you sure you want to delete this post and its attachments?")
     ) {
@@ -1440,9 +1442,9 @@ export class CreateAdminPost {
   }
 
   // Opens the custom popup dialog
-  openDeleteModal(id: string): void {
+  openDeleteModal(id: any): void {
     this.activeMenuPostId = null;
-    this.productToDeleteId = id;
+    this.productToDeleteId = Number(id);
     this.showDeleteModal = true;
   }
 
@@ -1450,6 +1452,7 @@ export class CreateAdminPost {
   cancelDelete(): void {
     this.showDeleteModal = false;
     this.productToDeleteId = "";
+    this.cd.detectChanges();
   }
 
   // Executed when "OK" / "Delete" is pressed in the modal

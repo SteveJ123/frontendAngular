@@ -873,6 +873,7 @@ export class CreateUserPost {
       this.toastService.error("Post Not Created Successfully");
     } finally {
       this.isUploading = false;
+      this.cd.detectChanges();
     }
   }
 
@@ -1315,6 +1316,7 @@ export class CreateUserPost {
       this.toastService.error("Post Not Updated Successfully!");
     } finally {
       this.isUploading = false;
+      this.cd.detectChanges();
     }
   }
 

@@ -1076,3 +1076,22 @@
     </div>
   </div>
 </div>
+
+<div
+  *ngIf="isUploading"
+  class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+>
+  <div
+    class="flex flex-col items-center gap-4 rounded-xl bg-[#f3fab5] p-6 shadow-2xl border border-slate-800"
+  >
+    <!-- Animated Spinner -->
+    <div
+      class="h-12 w-12 animate-spin rounded-full border-4 border-slate-600 border-t-blue-500"
+    ></div>
+
+    <!-- Message Text -->
+    <p class="text-sm font-medium tracking-wide text-black-200">
+      అప్‌లోడ్ చేస్తోంది
+    </p>
+  </div>
+</div>
