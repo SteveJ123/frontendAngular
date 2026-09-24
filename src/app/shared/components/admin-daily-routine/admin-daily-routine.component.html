@@ -1,0 +1,147 @@
+<div class="p-4 bg-gray-50/30 shadow rounded-lg max-w-4xl mx-auto">
+  <!-- Language Selector & Controls -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center space-x-2">
+      <label class="font-bold text-gray-700">Language / భాష:</label>
+      <select
+        [(ngModel)]="selectedLanguage"
+        (change)="loadMonthlyRoutines()"
+        class="border p-2 rounded bg-[#f3fab5]"
+      >
+        <option value="english">English</option>
+        <option value="telugu">తెలుగు (Telugu)</option>
+      </select>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <button
+        mwlCalendarPreviousView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="loadMonthlyRoutines()"
+        class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+      >
+        Prev
+      </button>
+      <!-- <button
+        mwlCalendarToday
+        [(viewDate)]="viewDate"
+        (viewDateChange)="loadMonthlyRoutines()"
+        class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Today
+      </button> -->
+      <button
+        mwlCalendarNextView
+        [view]="view"
+        [(viewDate)]="viewDate"
+        (viewDateChange)="loadMonthlyRoutines()"
+        class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+      >
+        Next
+      </button>
+    </div>
+    <h3 class="text-xl font-bold">{{ viewDate | date: "MMMM yyyy" }}</h3>
+  </div>
+
+  <!-- Month Calendar View -->
+  <mwl-calendar-month-view
+    [viewDate]="viewDate"
+    [events]="events"
+    (dayClicked)="onDayClicked($event.day)"
+  >
+  </mwl-calendar-month-view>
+
+  <!-- Admin Modal Popup -->
+  <div
+    *ngIf="showModal"
+    class="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/50 backdrop-blur-sm p-4 transition-opacity animate-fadeIn"
+  >
+    <div class="bg-[#f3fab5] rounded-lg p-6 max-w-md w-full shadow-xl">
+      <h3 class="text-xl font-bold mb-1">
+        Daily Routine ({{ selectedLanguage | uppercase }})
+      </h3>
+      <p class="text-sm font-semibold text-gray-500 mb-4">
+        Date (IST): {{ selectedDate }}
+      </p>
+
+      <!-- Single Multi-Line Textarea -->
+      <div class="space-y-3">
+        <label class="block text-xs text-gray-600 font-semibold">
+          Enter/Edit Routine (Time on first line, Task on second line):
+        </label>
+        <textarea
+          [(ngModel)]="routineText"
+          rows="8"
+          placeholder="6-7 am&#10;task1&#10;7-8 am&#10;task2&#10;8-9 am&#10;task3"
+          class="w-full border p-3 rounded text-sm font-mono focus:ring-2 focus:ring-blue-500"
+        ></textarea>
+
+        <div class="flex space-x-2">
+          <button
+            (click)="saveAllRoutines()"
+            class="bg-[#960000] text-white px-4 py-2 rounded text-sm font-medium hover:bg-gray-600"
+          >
+            Save Routine
+          </button>
+          <button
+            (click)="closeModal()"
+            class="bg-[#960000] text-white px-4 py-2 rounded text-sm font-medium hover:bg-gray-600"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Existing Saved Routines List with Edit & Delete options -->
+      <div class="mt-6 border-t pt-4">
+        <div class="flex justify-between items-center mb-2">
+          <h4 class="font-bold text-sm text-gray-700">
+            Saved Tasks for this Date:
+          </h4>
+          <button
+            *ngIf="dayRoutines.length > 0"
+            (click)="editDayRoutines()"
+            class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-semibold hover:bg-blue-200"
+          >
+            Load to Textarea
+          </button>
+        </div>
+
+        <div class="max-h-44 overflow-y-auto space-y-2">
+          <div
+            *ngFor="let item of dayRoutines; let i = index"
+            class="flex justify-between items-center bg-gray-50 p-2 rounded text-sm border"
+          >
+            <div>
+              <span class="font-semibold text-blue-700">{{ item.time }}:</span>
+              <span class="ml-1 text-gray-800">{{ item.task }}</span>
+            </div>
+
+            <div class="space-x-2">
+              <button
+                (click)="editDayRoutines()"
+                class="text-blue-600 text-xs font-bold hover:underline"
+              >
+                Edit
+              </button>
+              <button
+                (click)="deleteRoutine(i)"
+                class="text-red-600 text-xs font-bold hover:underline"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <div
+            *ngIf="dayRoutines.length === 0"
+            class="text-xs text-gray-400 italic"
+          >
+            No routines added for this date yet.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

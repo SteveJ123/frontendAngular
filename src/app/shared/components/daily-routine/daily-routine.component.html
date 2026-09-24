@@ -1,0 +1,70 @@
+<div class="p-4 max-w-4xl mx-auto bg-white shadow rounded-lg">
+  <!-- Checklist Component View -->
+  <app-routine-checklist
+    *ngIf="showChecklistView"
+    [userId]="userId"
+    [selectedDate]="selectedDate"
+    [language]="selectedLanguage"
+    (backToCalendar)="goBackToCalendar()"
+  >
+  </app-routine-checklist>
+
+  <!-- Calendar View -->
+  <div *ngIf="!showChecklistView">
+    <!-- Header Controls -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+      <div class="flex items-center space-x-2">
+        <label class="font-bold text-gray-700">Language / భాష:</label>
+        <select
+          [(ngModel)]="selectedLanguage"
+          (change)="loadMonthlyRoutines()"
+          class="border p-2 rounded focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="english">English</option>
+          <option value="telugu">తెలుగు (Telugu)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button
+          mwlCalendarPreviousView
+          [view]="view"
+          [(viewDate)]="viewDate"
+          (viewDateChange)="loadMonthlyRoutines()"
+          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm font-semibold"
+        >
+          Prev
+        </button>
+        <button
+          mwlCalendarToday
+          [(viewDate)]="viewDate"
+          (viewDateChange)="loadMonthlyRoutines()"
+          class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-semibold"
+        >
+          Today
+        </button>
+        <button
+          mwlCalendarNextView
+          [view]="view"
+          [(viewDate)]="viewDate"
+          (viewDateChange)="loadMonthlyRoutines()"
+          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm font-semibold"
+        >
+          Next
+        </button>
+      </div>
+
+      <h3 class="text-xl font-bold text-gray-800">
+        {{ viewDate | date: "MMMM yyyy" }}
+      </h3>
+    </div>
+
+    <!-- Calendar View -->
+    <mwl-calendar-month-view
+      [viewDate]="viewDate"
+      [events]="events"
+      (dayClicked)="onDayClicked($event.day)"
+    >
+    </mwl-calendar-month-view>
+  </div>
+</div>

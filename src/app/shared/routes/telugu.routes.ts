@@ -21,6 +21,9 @@ import { AdminTrackerList } from "../components/telugu/admin-tracker-list/admin-
 import { Register } from "../components/register/register";
 import { Events } from "../components/events/events";
 import { NutritionDetails } from "../components/nutrition-details/nutrition-details";
+import { AdminDailyRoutineComponent } from "../components/admin-daily-routine/admin-daily-routine.component";
+import { DailyRoutineComponent } from "../components/daily-routine/daily-routine.component";
+import { RoutineChecklistComponent } from "../components/routine-checklist/routine-checklist.component";
 
 export const TELUGU_ROUTES: Routes = [
   { path: "", redirectTo: "login", pathMatch: "full" },
@@ -119,6 +122,24 @@ export const TELUGU_ROUTES: Routes = [
     component: AdminTrackerList,
     canMatch: [roleGuard],
     data: { roles: ["admin"] },
+  },
+  {
+    path: "admin-daily-routine",
+    component: AdminDailyRoutineComponent,
+    canMatch: [roleGuard],
+    data: { roles: ["admin"] },
+  },
+  {
+    path: "daily-routine",
+    component: DailyRoutineComponent,
+    canMatch: [roleGuard],
+    data: { roles: ["user"] },
+  },
+  {
+    path: "daily-checklist",
+    component: RoutineChecklistComponent,
+    canMatch: [roleGuard],
+    data: { roles: ["user"] },
   },
   {
     path: "register",

@@ -19,12 +19,14 @@ import { Service } from "../../../services/service";
 import { registerLocaleData } from "@angular/common";
 import localeTe from "@angular/common/locales/te";
 import { ActivatedRoute } from "@angular/router";
+import { RouterLink } from "@angular/router";
 
 // Register Telugu locale data
 registerLocaleData(localeTe);
 @Component({
   selector: "app-daily-tracker",
   imports: [
+    RouterLink,
     CommonModule,
     FormsModule,
     CalendarPreviousViewDirective,

@@ -32,7 +32,9 @@ export const routes: Routes = [
         path: "en",
         canMatch: [roleGuard],
         loadChildren: () =>
-          import("./shared/routes/english.routes").then((m) => m.ENGLISH_ROUTES),
+          import("./shared/routes/english.routes").then(
+            (m) => m.ENGLISH_ROUTES,
+          ),
       },
       {
         path: "te",

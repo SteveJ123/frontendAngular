@@ -1,15 +1,40 @@
 <div class="bg-[#f3fab5] p-4 md:p-8 max-w-7xl mx-auto font-sans">
+  <!-- HTML Navigation Button -->
+  <button
+    [routerLink]="['/te/daily-routine']"
+    class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="0 8 7 0 0 1 14 0 7 7 0 0 1-14 0zM8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+      />
+    </svg>
+    <span>Daily Routine</span>
+  </button>
   <h1 class="text-2xl font-bold mb-6 text-gray-800">అలవాట్లు</h1>
   @if (dailyTrackerUsername) {
-    <hr />
-    <h1 class="text-medium font-bold mb-6 text-gray-800">పేరు: {{ dailyTrackerUsername }}</h1>
+  <hr />
+  <h1 class="text-medium font-bold mb-6 text-gray-800">
+    పేరు: {{ dailyTrackerUsername }}
+  </h1>
   }
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Left side: Calendar Section -->
     <div class="lg:col-span-2 rounded-xl shadow-sm border border-gray-100 p-4">
       <!-- Navigation Controls -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4"
+      >
         <h2 class="text-xl font-semibold text-gray-700">
           {{ viewDate | date: 'MMMM yyyy' : '' : locale }}
         </h2>
@@ -18,7 +43,9 @@
         <ng-template #customCellTemplate let-day="day" let-locale="locale">
           <div class="cal-cell-top relative min-h-[100px] p-1">
             <!-- Day Number in top-right corner -->
-            <span class="cal-day-number font-normal text-xs text-gray-400 absolute top-0.5 right-1">
+            <span
+              class="cal-day-number font-normal text-xs text-gray-400 absolute top-0.5 right-1"
+            >
               {{ day.date | date: 'd' : '' : locale }}
             </span>
 
@@ -37,7 +64,9 @@
                 </div>
 
                 <!-- Event Title -->
-                <span class="text-[11px] leading-tight font-semibold text-white break-words">
+                <span
+                  class="text-[11px] leading-tight font-semibold text-white break-words"
+                >
                   {{ event.title }}
                 </span>
               </div>
@@ -90,7 +119,9 @@
     <!-- Right side: Habits Action Widget -->
     <div class="lg:col-span-1">
       <div class="bg-[#f3fab5] rounded-xl shadow-sm border border-gray-100 p-5">
-        <h3 class="text-base font-semibold text-gray-800 mb-4">ఈ రోజు అలవాట్లను పూర్తి చేయండి</h3>
+        <h3 class="text-base font-semibold text-gray-800 mb-4">
+          ఈ రోజు అలవాట్లను పూర్తి చేయండి
+        </h3>
 
         <!-- Spinner Container -->
         <div
@@ -135,7 +166,10 @@
             />
 
             <div>
-              <p [class.line-through]="isTodayCompleted" class="text-sm font-medium text-gray-700">
+              <p
+                [class.line-through]="isTodayCompleted"
+                class="text-sm font-medium text-gray-700"
+              >
                 ప్రతిరోజూ చేసే అభ్యాసం
               </p>
               <span class="text-xs text-gray-400">{{ completedTime }}</span>

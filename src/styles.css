@@ -35,8 +35,9 @@ html,
 } */
 
 body {
-  /* font-family: 'Poppins', sans-serif; */
-  font-family: "Ponnala";
+  /* font-family: "Poppins", sans-serif; */
+  /* font-family: "Ponnala"; */
+  font-family: "Noto Sans Telugu", sans-serif;
 }
 
 /* Ensure form controls inherit the parent font */

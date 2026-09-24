@@ -57,15 +57,17 @@ export class AppHeaderComponent {
   private sub = new Subscription();
   profileImage = "";
 
-  currentLang = "en";
+  currentLang = "";
   get currentRouteLanguage(): string {
     const urlSegments = this.router.url.split("/").filter(Boolean);
     return urlSegments[0] === "te" ? "Telugu" : "English";
   }
   ngOnInit() {
     const userLanguage = this.authService.getUserLanguage() || "en";
+    console.log("header currentRouteLanguage", this.currentRouteLanguage);
     this.currentLang =
-      userLanguage.toLowerCase().trim() === "telugu" ? "te" : "en";
+      this.currentRouteLanguage.toLowerCase().trim() === "telugu" ? "te" : "en";
+    this.cdr.detectChanges();
     this.userId = Number(this.authService.getUserId());
 
     // 1. Get user role from Auth Service
@@ -124,6 +126,7 @@ export class AppHeaderComponent {
       this.currentLang =
         defaultLang === "telugu" || defaultLang === "te" ? "te" : "en";
     }
+    this.cdr.detectChanges();
   }
 
   // fetchUserProfile(): void {

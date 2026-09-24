@@ -597,6 +597,48 @@ export class Service {
     );
   }
 
+  getMonthlyRoutines(
+    userId: number,
+    year: number,
+    month: number,
+    language: string,
+  ): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.apiUrl}routines/monthly?userId=${userId}&year=${year}&month=${month}&language=${language}`,
+    );
+  }
+
+  getRoutinesByDate(
+    userId: number,
+    date: string,
+    language: string,
+  ): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.apiUrl}routines/by-date?userId=${userId}&date=${date}&language=${language}`,
+    );
+  }
+
+  createRoutine(routine: any) {
+    return this.http.post(`${this.apiUrl}routines`, routine);
+  }
+
+  upsertRoutine(routine: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/upsert`, routine);
+  }
+
+  deleteRoutine(recordId: any, taskId: any): Observable<any> {
+    return this.http.delete(
+      `${this.apiUrl}routines/${recordId}/task/${taskId}`,
+    );
+  }
+
+  toggleRoutineCompletion(recordId: any, payload: any): Observable<any> {
+    return this.http.patch(
+      `${this.apiUrl}routines/${recordId}/complete`,
+      payload,
+    );
+  }
+
   fetchUsers() {
     return this.http.get<any>(`${this.apiUrl}registered-users`);
   }

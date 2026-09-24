@@ -17,10 +17,12 @@ import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 import { CustomDateFormatter } from "./customDateFormatter";
 import { Service } from "../../../services/service";
 import { ActivatedRoute } from "@angular/router";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-daily-tracker",
   imports: [
+    RouterLink,
     CommonModule,
     FormsModule,
     CalendarPreviousViewDirective,

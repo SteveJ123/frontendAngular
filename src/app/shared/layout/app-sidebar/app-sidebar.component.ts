@@ -34,13 +34,20 @@ export class AppSidebarComponent {
 
   private authService = inject(AuthService);
   public sidebarService = inject(SidebarService);
+  public cd = inject(ChangeDetectorRef);
   userRole = this.authService.getUserRole();
   private router = inject(Router);
-  currentLang = "en";
+  currentLang = "";
   private routerSubscription!: Subscription;
+
+  get currentRouteLanguage(): string {
+    const urlSegments = this.router.url.split("/").filter(Boolean);
+    return urlSegments[0] === "te" ? "te" : "en";
+  }
+
   ngOnInit() {
     const rawLang = this.authService.getUserLanguage() || "en";
-    this.currentLang = rawLang.toLowerCase().trim() === "telugu" ? "te" : "en";
+    this.currentLang = this.currentRouteLanguage.toLowerCase().trim();
 
     this.detectLanguageFromUrl(this.router.url);
 
@@ -98,6 +105,8 @@ export class AppSidebarComponent {
 
     // Close sidebar on mobile
     this.sidebarService.setSidebarState(false);
+    this.currentLang = this.currentRouteLanguage === "te" ? "en" : "te";
+    this.cd.detectChanges();
   }
 
   // Call this method whenever any OTHER sidebar item is clicked to reset the highlight
