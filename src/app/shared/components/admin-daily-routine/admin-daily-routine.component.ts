@@ -96,8 +96,7 @@ export class AdminDailyRoutineComponent {
       .subscribe((routines) => {
         this.events = routines.map((r) => ({
           start: this.parseISTDate(r.date),
-          title: `${r.time} - ${r.task}`,
-          meta: r,
+          title: `${r.time}`,
         }));
       });
     this.cd.detectChanges();

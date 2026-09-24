@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
@@ -46,6 +46,7 @@ import { Router } from "@angular/router";
 })
 export class DailyRoutineComponent {
   private routineService = inject(Service);
+  private cd = inject(ChangeDetectorRef);
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Month;
@@ -87,16 +88,15 @@ export class DailyRoutineComponent {
   loadMonthlyRoutines() {
     const year = this.viewDate.getFullYear();
     const month = this.viewDate.getMonth() + 1;
-
     this.routineService
       .getMonthlyRoutines(this.userId, year, month, this.selectedLanguage)
       .subscribe({
         next: (routines) => {
           this.events = routines.map((r) => ({
             start: this.parseISTDate(r.date),
-            title: `${r.time} - ${r.task}`,
-            meta: r,
+            title: `${r.date}`,
           }));
+          this.cd.detectChanges();
         },
         error: (err) => console.error("Error fetching monthly routines:", err),
       });

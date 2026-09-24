@@ -1,15 +1,15 @@
-<div class="bg-gray-50 p-6 rounded-lg border shadow-sm h-dvh">
+<div class="bg-[#f3fab5] p-6 rounded-lg border shadow-sm h-dvh">
   <!-- Back Button & Header -->
   <div class="flex items-center justify-between border-b pb-4 mb-4">
     <button
       (click)="onBack()"
-      class="flex items-center space-x-2 text-sm font-bold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-2 rounded-md transition-colors"
+      class="flex items-center space-x-2 text-sm font-bold text-[#960000] hover:text-blue-800 px-3 py-2 rounded-md transition-colors"
     >
       <span>&larr; Back to Calendar</span>
     </button>
     <div class="text-right">
-      <h2 class="text-lg font-bold text-gray-800">Daily Checklist</h2>
-      <span class="text-xs text-gray-500 font-semibold"
+      <h2 class="text-lg font-bold text-[#960000]">Daily Checklist</h2>
+      <span class="text-xs text-[#960000] font-semibold"
         >Date: {{ selectedDate }}</span
       >
     </div>
@@ -25,7 +25,7 @@
     <div
       *ngFor="let item of tasks; let i = index"
       (click)="toggleComplete(item, i)"
-      class="flex items-center justify-between bg-white p-4 rounded-md border shadow-sm cursor-pointer hover:border-blue-400 transition-all"
+      class="flex items-center justify-between bg-[#f3fab5] p-4 rounded-md border shadow-sm cursor-pointer hover:border-blue-400 transition-all"
       [class.bg-green-50]="item.isCompleted"
     >
       <div class="flex items-center space-x-3">
@@ -37,12 +37,12 @@
         />
         <div>
           <span
-            class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-2 py-0.5 rounded"
+            class="text-xs font-bold uppercase tracking-wider text-[#960000] bg-blue-100 px-2 py-0.5 rounded"
           >
             {{ item.time }}
           </span>
           <p
-            class="text-sm font-medium mt-1 text-gray-800"
+            class="text-sm font-medium mt-1 text-[#960000]"
             [class.line-through]="item.isCompleted"
             [class.text-gray-400]="item.isCompleted"
           >
