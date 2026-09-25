@@ -237,7 +237,7 @@
                   <!-- IMAGE -->
                   <img
                     *ngIf="media.mediaType === 'image'"
-                    [src]="getMediaUrl(media.path)"
+                    [src]="media.fileLink"
                     [alt]="media.filename"
                     class="block h-auto max-h-[650px] w-full object-cover"
                   />
@@ -248,14 +248,11 @@
                     controls
                     class="block max-h-[650px] w-full"
                   >
-                    <source
-                      [src]="getMediaUrl(media.path)"
-                      [type]="media.mimetype"
-                    />
+                    <source [src]="media.fileLink" [type]="media.mimetype" />
                   </video>
 
                   <!-- OTHER FILE -->
-                  <div
+                  <!-- <div
                     *ngIf="media.mediaType !== 'image' && media.mediaType !== 'video'"
                     class="flex items-center gap-3 p-4"
                   >
@@ -281,6 +278,12 @@
                     >
                       {{ media.filename }}
                     </a>
+                  </div> -->
+                  <div *ngIf="media.mediaType === 'audio'" class="w-full p-2">
+                    <audio controls class="w-full">
+                      <source [src]="media.fileLink" />
+                      Your browser does not support the audio element.
+                    </audio>
                   </div>
                 </ng-container>
               </div>

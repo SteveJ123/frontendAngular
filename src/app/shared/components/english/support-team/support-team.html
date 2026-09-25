@@ -27,7 +27,7 @@
         <!-- Person Header -->
         <div class="flex items-center space-x-4">
           <img
-            [src]="person.avatar || 'https://via.placeholder.com/150'"
+            [src]="person.avatar || 'user.png'"
             [alt]="person.name"
             class="w-12 h-12 rounded-full border object-cover shrink-0"
           />
@@ -85,7 +85,7 @@
         >
           Call Now
         </a>
-        <div class="flex gap-2">
+        <div class="flex gap-2" *ngIf="userType === 'admin'">
           <button
             (click)="openEditModal(person)"
             class="w-1/2 py-1.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition"

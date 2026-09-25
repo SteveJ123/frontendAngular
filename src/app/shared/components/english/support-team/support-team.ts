@@ -5,6 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { ToastService } from "../../../services/toast.service";
 import { Service } from "../../../services/service";
 import { Router } from "@angular/router";
+import { AuthService } from "../../../services/AuthService";
 
 export interface SupportMember {
   _id?: string;
@@ -30,6 +31,7 @@ export class SupportTeam {
   private toastService = inject(ToastService);
   private cd = inject(ChangeDetectorRef);
   private service = inject(Service);
+    private authService = inject(AuthService);
   supportTeam = signal<any[]>([]);
   isModalOpen = false;
   isEditing = false;
@@ -45,8 +47,9 @@ export class SupportTeam {
     const urlSegments = this.router.url.split("/").filter(Boolean);
     return urlSegments[0] === "te" ? "Telugu" : "English";
   }
-
+userType: any = "";
   ngOnInit(): void {
+    this.userType = this.authService.getUserRole();
     this.fetchTeam();
   }
 
