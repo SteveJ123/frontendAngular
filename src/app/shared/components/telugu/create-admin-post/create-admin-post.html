@@ -260,15 +260,17 @@
                     </button>
 
                     <!-- Emoji Picker Popover -->
+                    <!-- absolute bottom-12 left-0 z-50 w-64 sm:w-72 bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-200 p-3 animate-fadeIn -->
+
                     <div
                       *ngIf="showPicker"
-                      class="absolute bottom-12 left-0 z-50 w-64 sm:w-72 bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-200 p-3 animate-fadeIn"
+                      class="absolute bottom-12 left-0 z-50 w-[270px] xs:w-[300px] sm:w-80 max-w-[calc(100vw-2.5rem)] bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-200 p-1.5 sm:p-2.5 animate-fadeIn overflow-hidden"
                       (click)="$event.stopPropagation()"
                     >
                       <!-- Popup Header -->
                       <emoji-picker
                         (emoji-click)="addEmoji($event, postContentInput)"
-                        class="w-full h-[320px] [--num-columns:6]"
+                        class="custom-emoji-picker w-full h-[280px] sm:h-[320px]"
                       ></emoji-picker>
                     </div>
                   </div>
@@ -1003,7 +1005,7 @@
                   </div>
 
                   <div
-                    class="flex-1 bg-gray-100 rounded-2xl p-3 border border-gray-200 focus-within:border-gray-300 focus-within:bg-[#f3fab5] transition space-y-2"
+                    class="flex-1 bg-[#f3fab5] rounded-2xl p-3 border border-gray-200 focus-within:border-gray-300 focus-within:bg-[#f3fab5] transition space-y-2"
                   >
                     <textarea
                       rows="2"
@@ -1015,7 +1017,7 @@
                     ></textarea>
                     <emoji-picker
                       *ngIf="showCommentPicker"
-                      class="w-full h-[320px] [--num-columns:6]"
+                      class="custom-emoji-picker w-full h-[260px] sm:h-[300px]"
                       (emoji-click)="addCommentEmoji($event, commentContent, post)"
                     ></emoji-picker>
 
@@ -1030,12 +1032,12 @@
                         >
                           😊
                         </button>
-                        <button
+                        <!-- <button
                           type="button"
                           class="hover:text-gray-700 text-base"
                         >
                           📷
-                        </button>
+                        </button> -->
                       </div>
 
                       <button

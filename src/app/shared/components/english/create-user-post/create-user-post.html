@@ -252,7 +252,7 @@
                       <!--  -->
                       <emoji-picker
                         (emoji-click)="addEmoji($event, postContentInput)"
-                        class="w-full h-[320px] [--num-columns:6]"
+                        class="custom-emoji-picker w-full h-[280px] sm:h-[320px]"
                       ></emoji-picker>
                     </div>
                   </div>
@@ -971,7 +971,7 @@
                     ></textarea>
                     <emoji-picker
                       *ngIf="showCommentPicker"
-                      class="w-full h-[320px] [--num-columns:6]"
+                      class="custom-emoji-picker w-full h-[260px] sm:h-[300px]"
                       (emoji-click)="addCommentEmoji($event, commentContent, post)"
                     ></emoji-picker>
 
