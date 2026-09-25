@@ -1374,22 +1374,24 @@ export class CreateUserPost {
   // Executed when "OK" / "Delete" is pressed in the modal
   confirmDelete(): void {
     if (!this.productToDeleteId) return;
-    this.service.deletePost(this.productToDeleteId, this.userId).subscribe({
-      next: (res: any) => {
-        if (res.success) {
-          this.getPostsObservable();
-          this.toastService.success("Post deleted successfully!");
+    this.service
+      .deletePost(this.productToDeleteId, this.userId, this.userType)
+      .subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            this.getPostsObservable();
+            this.toastService.success("Post deleted successfully!");
+            this.cancelDelete();
+            this.cd.detectChanges();
+          }
+        },
+        error: (err) => {
+          (console.error("Error deleting product:", err), this.cancelDelete());
           this.cancelDelete();
           this.cd.detectChanges();
-        }
-      },
-      error: (err) => {
-        (console.error("Error deleting product:", err), this.cancelDelete());
-        this.cancelDelete();
-        this.cd.detectChanges();
-        this.toastService.error("Post not deleted!");
-      },
-    });
+          this.toastService.error("Post not deleted!");
+        },
+      });
   }
 
   activeMenuPostId: string | null = null;

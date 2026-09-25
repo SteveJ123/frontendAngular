@@ -176,8 +176,14 @@ export class Service {
     return this.http.put(`${this.apiUrl}posts/${postId}`, formData);
   }
 
-  deletePost(postId: any, userId: any): Observable<any> {
-    return this.http.delete(`${this.apiUrl}posts/${postId}?userid=${userId}`);
+  // deletePost(postId: any, userId: any): Observable<any> {
+  //   return this.http.delete(`${this.apiUrl}posts/${postId}?userid=${userId}`);
+  // }
+  deletePost(postId: string, userId: string, role: string): Observable<any> {
+    // Set query parameters matching req.query.userId and req.query.role
+    const params = new HttpParams().set("userId", userId).set("role", role);
+
+    return this.http.delete<any>(`${this.apiUrl}posts/${postId}`, { params });
   }
 
   getSession(language: any, courseType: any, role: any) {
