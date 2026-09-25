@@ -125,7 +125,7 @@
       <div *ngFor="let group of groupedSessions" class="space-y-3">
         <!-- Date Header Banner -->
         <div
-          class="bg-[#EAECEF] px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700"
+          class="bg-[#960000] px-4 py-2.5 rounded-lg text-sm font-semibold text-white"
         >
           {{ group.date }}
         </div>
@@ -139,13 +139,13 @@
             <div class="flex items-center gap-1">
               <div>
                 <p
-                  class="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight"
+                  class="text-sm sm:text-base font-extrabold text-[#960000] tracking-tight"
                 >
                   {{ session.startTime }} – {{ session.endTime }}
                 </p>
                 <p
                   *ngIf="session.occurrence"
-                  class="text-xs text-gray-400 flex items-center gap-1.5 mt-0.5"
+                  class="text-xs text-[#960000] flex items-center gap-1.5 mt-0.5"
                 >
                   {{ session.occurrence.split(' ')[0] }} {{
                   session.occurrence.split(' ')[1] }}
@@ -154,11 +154,13 @@
             </div>
 
             <div>
-              <h1 class="font-extrabold text-gray-900 tracking-tight">
+              <h1 class="font-extrabold text-[#960000] tracking-tight">
                 {{ session.title == 'Face Yoga' ? 'ఫేస్ యోగా' : 'ఫేస్ యోగా +
                 రాజ్ యోగా' }}
               </h1>
-              <p class="text-xs text-gray-400 flex items-center gap-1.5 mt-0.5">
+              <p
+                class="text-xs text-[#960000] flex items-center gap-1.5 mt-0.5"
+              >
                 <!-- <span *ngIf="session.occurrence">{{ session.occurrence }}</span> -->
                 <span *ngIf="session.linkTypeNote"
                   >{{ session.linkTypeNote }}</span
@@ -171,7 +173,7 @@
           <div class="flex items-center gap-2 self-end sm:self-center relative">
             <button
               (click)="joinSession(session.meetingUrl)"
-              class="px-5 py-2 bg-[#9B9B9B] hover:bg-gray-600 text-white font-bold text-xs rounded-lg transition-colors shadow-sm"
+              class="px-5 py-2 bg-[#960000] text-white font-bold text-xs rounded-lg transition-colors shadow-sm"
             >
               చేరండి
             </button>

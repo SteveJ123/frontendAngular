@@ -1,0 +1,111 @@
+<div class="flex justify-center p-4">
+  <div
+    class="w-full md:w-1/2 mx-auto bg-[#f3fab5] p-3.5 sm:p-5 rounded-2xl shadow-sm border-2 border-[#4A4E69]/20 space-y-3.5 sm:space-y-4 flex flex-col transition-all duration-200"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between shrink-0">
+      <h3 class="font-bold text-[#960000] text-xs sm:text-sm tracking-wide">
+        {{ currentRouteLanguage === "Telugu" ? "లీడర్‌బోర్డ్" : "LeaderBoard" }}
+      </h3>
+      <button
+        type="button"
+        title="Information"
+        class="text-[#960000] hover:text-gray-600 text-xs sm:text-sm font-bold transition-colors p-1"
+      >
+        ⓘ
+      </button>
+    </div>
+
+    <!-- Time Filter Pills -->
+    <div
+      class="bg-gray-200/70 p-1 rounded-xl flex text-xs font-semibold text-#960000 gap-1 shrink-0 select-none"
+    >
+      <button
+        (click)="setActiveTab('alltime')"
+        [ngClass]="{
+          'bg-[#960000] text-white shadow-sm': activeTab === 'alltime',
+          'hover:text-gray-900 text-#960000 hover:bg-gray-200/50':
+            activeTab !== 'alltime',
+        }"
+        class="flex-1 py-1.5 px-2 rounded-lg text-center text-[11px] text-[#960000] sm:text-xs font-medium transition-all duration-150 cursor-pointer"
+      >
+        {{ currentRouteLanguage === "Telugu" ? "ఎప్పటికీ" : "Forever" }}
+      </button>
+
+      <button
+        (click)="setActiveTab('month')"
+        [ngClass]="{
+          'bg-[#960000] text-white shadow-sm': activeTab === 'month',
+          'hover:text-gray-900 text-#960000 hover:bg-gray-200/50':
+            activeTab !== 'month',
+        }"
+        class="flex-1 py-1.5 px-2 rounded-lg text-center text-[11px] text-[#960000] sm:text-xs font-medium transition-all duration-150 cursor-pointer"
+      >
+        {{ currentRouteLanguage === "Telugu" ? "నెల" : "Month" }}
+      </button>
+
+      <button
+        (click)="setActiveTab('week')"
+        [ngClass]="{
+          'bg-[#960000] text-white shadow-sm': activeTab === 'week',
+          'hover:text-gray-900 text-#960000 hover:bg-gray-200/50':
+            activeTab !== 'week',
+        }"
+        class="flex-1 py-1.5 px-2 rounded-lg text-center text-[11px] text-[#960000] sm:text-xs font-medium transition-all duration-150 cursor-pointer"
+      >
+        {{ currentRouteLanguage === "Telugu" ? "వారం" : "Week" }}
+      </button>
+    </div>
+
+    <!-- Users List Container -->
+    <div
+      class="space-y-2 sm:space-y-2.5 overflow-y-auto max-h-[calc(100vh-200px)] pr-1 flex-1"
+    >
+      <div
+        *ngFor="let user of filteredUsers; let i = index"
+        class="flex items-center justify-between p-2 rounded-xl hover:bg-black/5 border-b border-black/5 last:border-b-0 transition-colors duration-150"
+      >
+        <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+          <!-- Rank Indicator -->
+          <span class="w-5 text-center text-xs font-extrabold shrink-0">
+            <ng-container [ngSwitch]="i + 1">
+              <span *ngSwitchCase="1" class="text-base">🥇</span>
+              <span *ngSwitchCase="2" class="text-base">🥈</span>
+              <span *ngSwitchCase="3" class="text-base">🥉</span>
+              <span
+                *ngSwitchDefault
+                class="text-[#960000] font-bold text-[11px]"
+                >#{{ i + 1 }}</span
+              >
+            </ng-container>
+          </span>
+
+          <!-- Username -->
+          <span
+            class="text-xs sm:text-sm font-semibold text-[#960000] truncate max-w-[130px] sm:max-w-[180px]"
+            [title]="user.username"
+          >
+            {{ user.username }}
+          </span>
+        </div>
+
+        <!-- Points Badge -->
+        <div
+          class="bg-pink-50 text-[#960000] text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full border border-pink-200 flex items-center space-x-1 shrink-0 shadow-2xs"
+        >
+          <span>🏅</span>
+          <span>{{ user.points }}</span>
+        </div>
+      </div>
+
+      <!-- Empty State Fallback -->
+      <div
+        *ngIf="filteredUsers.length === 0"
+        class="flex flex-col items-center justify-center text-center text-xs text-gray-500 py-8 space-y-1"
+      >
+        <span class="text-lg">📊</span>
+        <p class="font-medium">ఈ సమయానికి టాపర్లు ఎవరూ లేరు.</p>
+      </div>
+    </div>
+  </div>
+</div>

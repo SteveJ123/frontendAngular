@@ -1,0 +1,20 @@
+/* Custom responsive scaling for emoji-picker Web Component */
+emoji-picker.custom-emoji-picker {
+  --num-columns: 5; /* Default 5 columns for narrow mobile screens */
+  --emoji-size: 1.25rem; /* Slightly smaller emojis for smaller viewports */
+  --category-emoji-size: 7.4px; /* Adjust category header icon sizes */
+  /* width: 100% !important; */
+  width: 100% !important;
+  max-width: 100% !important;
+  border: none !important;
+  background-color: transparent !important;
+}
+
+/* Tablet and Desktop Viewports */
+@media (min-width: 640px) {
+  emoji-picker.custom-emoji-picker {
+    --num-columns: 6; /* Expand to 6 columns on sm+ screens */
+    --emoji-size: 1.5rem; /* Standard emoji size */
+    --category-emoji-size: 9.4px;
+  }
+}

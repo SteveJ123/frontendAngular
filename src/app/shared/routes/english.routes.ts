@@ -24,6 +24,7 @@ import { NutritionDetails } from "../components/nutrition-details/nutrition-deta
 import { AdminDailyRoutineComponent } from "../components/admin-daily-routine/admin-daily-routine.component";
 import { DailyRoutineComponent } from "../components/daily-routine/daily-routine.component";
 import { RoutineChecklistComponent } from "../components/routine-checklist/routine-checklist.component";
+import { LeaderboardComponent } from "../../leaderboard/leaderboard.component";
 
 export const ENGLISH_ROUTES: Routes = [
   { path: "", redirectTo: "community-post", pathMatch: "full" },
@@ -138,6 +139,12 @@ export const ENGLISH_ROUTES: Routes = [
   {
     path: "daily-checklist",
     component: RoutineChecklistComponent,
+    canMatch: [roleGuard],
+    data: { roles: ["user"] },
+  },
+  {
+    path: "leaderboard",
+    component: LeaderboardComponent,
     canMatch: [roleGuard],
     data: { roles: ["user"] },
   },

@@ -323,11 +323,11 @@
               <button
                 class="text-white font-bold text-sm sm:text-base px-6 sm:px-7 py-2.5 rounded-xl transition"
                 [ngClass]="{
-                  'bg-[#9CA3AF] cursor-not-allowed opacity-70': !postContent || isUploading,
-                  'bg-blue-600 hover:bg-blue-700 cursor-pointer': postContent && !isUploading,
+                  'bg-[#9CA3AF] cursor-not-allowed opacity-70': !isPostValid,
+                  'bg-blue-600 hover:bg-blue-700 cursor-pointer': isPostValid,
                 }"
                 (click)="publishPost()"
-                [disabled]="!postContent"
+                [disabled]="!isPostValid"
               >
                 <span>ప్రచురించండి</span>
                 <!-- <span *ngIf="isUploading">Publishing...</span> -->

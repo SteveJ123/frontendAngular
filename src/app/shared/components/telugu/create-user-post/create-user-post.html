@@ -41,7 +41,7 @@
           <!-- MODAL CARD CONTAINER -->
           <div
             (click)="$event.stopPropagation()"
-            class="bg-[#f3fab5] rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 transform transition-all animate-scaleUp"
+            class="bg-[#f3fab5] rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-lg overflow-auto flex flex-col max-h-[90vh] border border-gray-100 transform transition-all animate-scaleUp"
           >
             <!-- MODAL HEADER -->
             <div
@@ -246,17 +246,19 @@
                     </button>
 
                     <!-- Emoji Picker Popover -->
+                    <!-- absolute bottom-12 left-0 z-50 w-64 sm:w-72 bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-200 p-3 animate-fadeIn -->
                     <div
                       *ngIf="showPicker"
-                      class="absolute bottom-12 left-0 z-50 w-64 sm:w-72 bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-200 p-3 animate-fadeIn"
+                      class="absolute bottom-12 left-0 z-50 w-[270px] xs:w-[300px] sm:w-80 max-w-[calc(100vw-2.5rem)] bg-[#f3fab5] rounded-2xl shadow-xl border border-gray-200 p-1.5 sm:p-2.5 animate-fadeIn overflow-hidden"
                       (click)="$event.stopPropagation()"
                     >
                       <!-- Popup Header -->
 
                       <!-- Emoji Grid Collection -->
+                      <!-- w-full h-[320px] [--num-columns:4] [--num-rows:4] -->
                       <emoji-picker
                         (emoji-click)="addEmoji($event, postContentInput)"
-                        class="w-full h-[320px] [--num-columns:6]"
+                        class="custom-emoji-picker w-full h-[280px] sm:h-[320px]"
                       ></emoji-picker>
                     </div>
                   </div>
@@ -310,11 +312,11 @@
               <button
                 class="text-white font-bold text-sm sm:text-base px-6 sm:px-7 py-2.5 rounded-xl transition"
                 [ngClass]="{
-                  'bg-[#9CA3AF] cursor-not-allowed opacity-70': !postContent || isUploading,
-                  'bg-blue-600 hover:bg-blue-700 cursor-pointer': postContent && !isUploading,
+                  'bg-[#9CA3AF] cursor-not-allowed opacity-70': !isPostValid,
+                  'bg-blue-600 hover:bg-blue-700 cursor-pointer': isPostValid,
                 }"
                 (click)="publishPost()"
-                [disabled]="!postContent"
+                [disabled]="!isPostValid"
               >
                 <span>ప్రచురించండి</span>
               </button>
@@ -378,7 +380,10 @@
               </div>
 
               <!-- EDIT/DELETE DROPDOWN (ONLY FOR POST OWNER) -->
-              <div *ngIf="post.userId._id == userId" class="relative group">
+              <div
+                *ngIf="post.userId._id == userId || userType ==='admin'"
+                class="relative group"
+              >
                 <button
                   (click)="toggleMenu(post._id, $event)"
                   class="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100"
@@ -967,9 +972,10 @@
                       placeholder="మీ భావాలను మరియు ఆలోచనలను వ్యక్తపరచండి..."
                       class="w-full bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none resize-none"
                     ></textarea>
+                    <!-- w-full h-[320px] [--num-columns:4] -->
                     <emoji-picker
                       *ngIf="showCommentPicker"
-                      class="w-full h-[320px] [--num-columns:6]"
+                      class="custom-emoji-picker w-full h-[260px] sm:h-[300px]"
                       (emoji-click)="addCommentEmoji($event, commentContent, post)"
                     ></emoji-picker>
 

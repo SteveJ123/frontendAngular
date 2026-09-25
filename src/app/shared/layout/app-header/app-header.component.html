@@ -29,7 +29,7 @@
         class="flex flex-col text-white font-bold text-lg rounded flex items-center tracking-tighter"
       >
         <span
-          class="lg:block text-xs tracking-widest text-gray-500 font-semibold uppercase loading-tight whitespace-normal"
+          class="lg:block text-xs tracking-widest text-[#960000] font-semibold uppercase loading-tight whitespace-normal"
           >{{
             currentLang === "en"
               ? "Gyan Murli Foundation"
@@ -38,7 +38,7 @@
         >
         <img src="logo.jpeg" alt="logo" class="w-auto h-14 object-fit" />
         <span
-          class="lg:inline text-xs tracking-widest text-gray-500 font-semibold uppercase loading-tight whitespace-normal"
+          class="lg:inline text-xs tracking-widest text-[#960000] font-semibold uppercase loading-tight whitespace-normal"
           >{{
             currentLang === "en"
               ? "Young, Happy & Healthy"
@@ -269,10 +269,10 @@
         <div
           class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-[#f3fab5] scrollbar-track-blue-100"
         >
-          <h3 class="text-xs font-bold uppercase tracking-wider text-gray-700">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-[#960000]">
             Notifications
           </h3>
-          <span class="text-[11px] font-semibold text-gray-500"
+          <span class="text-[11px] font-semibold text-[#960000]"
             >{{ unreadCount }} Unread</span
           >
         </div>
@@ -306,7 +306,7 @@
             <!-- Notification Content -->
             <div class="flex-1 min-w-0">
               <p class="text-xs text-gray-800 leading-snug">
-                <strong class="font-bold text-gray-900">
+                <strong class="font-bold text-[#960000]">
                   {{ notification?.sender?.username || "A User" }}
                 </strong>
                 published a new post:
@@ -364,7 +364,7 @@
               />
             </svg>
           </div>
-          <span class="text-sm font-bold text-gray-800 truncate">{{
+          <span class="text-sm font-bold text-[#960000] truncate">{{
             username
           }}</span>
         </div>
@@ -374,10 +374,10 @@
           <!-- View Profile -->
           <button
             (click)="viewProfile()"
-            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[#960000] hover:bg-gray-100 transition cursor-pointer"
           >
             <div
-              class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 shrink-0"
+              class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-[#960000] shrink-0"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -386,17 +386,17 @@
               </svg>
             </div>
             <span>{{
-              currentLang === "en" ? "View profile" : "ప్రొఫైల్ చూడు"
+              currentLang === "en" ? "View profile" : "వ్యక్తిగత వివరాలు"
             }}</span>
           </button>
 
           <!-- My Account -->
           <button
             (click)="myAccount()"
-            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[#960000] hover:bg-gray-100 transition cursor-pointer"
           >
             <div
-              class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 shrink-0"
+              class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-[#960000] shrink-0"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -410,10 +410,10 @@
           <!-- Logout -->
           <button
             (click)="logout()"
-            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-red-500 bg-red-50 hover:bg-red-100 transition cursor-pointer"
+            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[#960000] bg-red-50 hover:bg-red-100 transition cursor-pointer"
           >
             <div
-              class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-500 shrink-0"
+              class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-[#960000] shrink-0"
             >
               <svg
                 class="w-4 h-4"
@@ -429,7 +429,7 @@
                 />
               </svg>
             </div>
-            <span>{{ currentLang === "en" ? "Logout" : "నిష్క్రమించు" }}</span>
+            <span>{{ currentLang === "en" ? "Logout" : "బయటకి దారి" }}</span>
           </button>
         </div>
       </div>

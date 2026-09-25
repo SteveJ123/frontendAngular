@@ -189,7 +189,7 @@ export class CreateUserPost {
 
   // Saved confirmed tags shown on the main page
   savedTags = signal<TagItem[]>([]);
-  postContent: string = "";
+  postContent: any = "";
   posts$!: Observable<any[]>;
   cachedPosts: any[] = [];
   // Track viewed posts during the session to avoid duplicate API calls
@@ -774,9 +774,20 @@ export class CreateUserPost {
     // 1. Reset error state
     this.showPostContentError = false;
 
-    if (!this.postContent.trim()) {
+    const hasText = !!this.postContent && this.postContent.trim().length > 0;
+    const hasFiles =
+      (this.selectedFiles && this.selectedFiles.length > 0) ||
+      !!this.selectedFile;
+
+    // 2. Validation: Fail if neither text NOR files are provided
+    if (!hasText && !hasFiles) {
       this.showPostContentError = true;
       return;
+    }
+
+    // 4. Set fallback string if user uploaded media without text
+    if (!hasText && hasFiles) {
+      this.postContent = " "; // Avoid assigning boolean value to postContent string
     }
 
     const file: any = this.selectedFile;
@@ -843,6 +854,16 @@ export class CreateUserPost {
       this.isUploading = false;
       this.cd.detectChanges();
     }
+  }
+
+  // Helper property to keep HTML template condition clean and readable
+  get isPostValid(): boolean {
+    const hasContent = !!this.postContent && this.postContent.trim().length > 0;
+    const hasFiles =
+      (this.selectedFiles && this.selectedFiles.length > 0) ||
+      !!this.selectedFile;
+
+    return (hasContent || hasFiles) && !this.isUploading;
   }
 
   // Reset form after successful submission
@@ -912,98 +933,6 @@ export class CreateUserPost {
   showEmojiPicker: boolean = false;
 
   // Categorized emoji collection list
-  emojiList: string[] = [
-    "😀",
-    "😃",
-    "😄",
-    "😁",
-    "😆",
-    "😅",
-    "😂",
-    "🤣",
-    "😊",
-    "😇",
-    "🙂",
-    "🙃",
-    "😉",
-    "😌",
-    "😍",
-    "🥰",
-    "😘",
-    "😗",
-    "😙",
-    "😚",
-    "😋",
-    "😛",
-    "😜",
-    "🤪",
-    "😝",
-    "🤑",
-    "🤗",
-    "🤭",
-    "🤫",
-    "🤔",
-    "🤐",
-    "🤨",
-    "😐",
-    "😑",
-    "😶",
-    "😏",
-    "😒",
-    "🙄",
-    "😬",
-    "🤥",
-    "😌",
-    "😔",
-    "😪",
-    "🤤",
-    "😴",
-    "😷",
-    "🤒",
-    "🤕",
-    "🤢",
-    "🤮",
-    "🤧",
-    "🥵",
-    "🥶",
-    "🥴",
-    "😵",
-    "🤯",
-    "🤠",
-    "🥳",
-    "😎",
-    "🤓",
-    "🧐",
-    "😕",
-    "😟",
-    "🙁",
-    "😮",
-    "😯",
-    "😲",
-    "😳",
-    "🥺",
-    "😦",
-    "👍",
-    "👎",
-    "👏",
-    "🙌",
-    "👐",
-    "🤲",
-    "🤝",
-    "🙏",
-    "✌️",
-    "🤘",
-    "🔥",
-    "✨",
-    "💖",
-    "❤️",
-    "🎉",
-    "🌟",
-    "💯",
-    "🚀",
-    "💡",
-    "💬",
-  ];
 
   /**
    * Toggles emoji picker overlay display
