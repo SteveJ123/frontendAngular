@@ -86,6 +86,22 @@ export class Service {
     return this.http.post(`${this.apiUrl}comments`, commentPayload);
   }
 
+  deleteComment(
+    commentId: string | number,
+    userId: string | number,
+    role: string,
+    isAdminPost: boolean = false,
+  ): Observable<any> {
+    const payload = {
+      userId: userId,
+      userRole: role,
+    };
+    return this.http.delete(
+      `${this.apiUrl}comments/${commentId}?isAdminPost=${isAdminPost}`,
+      { body: payload },
+    );
+  }
+
   getCourses(
     language?: string,
     courseType?: string,

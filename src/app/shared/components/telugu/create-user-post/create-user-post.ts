@@ -972,6 +972,7 @@ export class CreateUserPost {
       post.loadingComments = true;
       this.loadComments(post);
     }
+    this.cd.detectChanges();
   }
 
   loadComments(post: Post) {
@@ -1309,6 +1310,40 @@ export class CreateUserPost {
       textarea.focus();
       textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
     });
+  }
+
+  deleteComment(post: any, commentId: any): void {
+    const isAdminPost = false; // Pass true if comment belongs to AdminComment
+    console.log("post", post);
+    console.log("commentId", commentId);
+
+    let userId = post.userId._id;
+    let userType = post.userId.role;
+
+    if (confirm("Are you sure you want to delete this comment?")) {
+      this.service
+        .deleteComment(commentId._id, userId, userType, isAdminPost)
+        .subscribe({
+          next: () => {
+            // Remove deleted comment and nested replies locally from UI state
+            console.log("post.comments", post.comments);
+            post.comments = post.comments.filter(
+              (c: any) =>
+                c._id !== commentId._id && c.parentId !== commentId._id,
+            );
+            if (post.commentCount && post.commentCount > 0) {
+              post.commentCount--;
+            }
+            this.cd.detectChanges();
+            this.toastService.success("comment deleted successfully!");
+          },
+          error: (err) => {
+            console.error("Failed to delete comment:", err);
+            this.cd.detectChanges();
+            this.toastService.error("comment not deleted successfully!");
+          },
+        });
+    }
   }
 
   // Listen for clicks anywhere in the document
