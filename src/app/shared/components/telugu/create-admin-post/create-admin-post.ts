@@ -714,47 +714,47 @@ export class CreateAdminPost {
     const file = input.files[0];
 
     // 1. File Size Limits
-    const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
-    const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50 MB
-    const MAX_AUDIO_SIZE = 20 * 1024 * 1024; // 20 MB
+    // const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+    // const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50 MB
+    // const MAX_AUDIO_SIZE = 20 * 1024 * 1024; // 20 MB
 
-    if (type === "image" && file.size > MAX_IMAGE_SIZE) {
-      this.showError("Image size must be less than 5 MB.");
-      input.value = "";
-      return;
-    }
-    if (type === "video" && file.size > MAX_VIDEO_SIZE) {
-      this.showError("Video file size must be less than 50 MB.");
-      input.value = "";
-      return;
-    }
-    if (type === "audio" && file.size > MAX_AUDIO_SIZE) {
-      this.showError("Audio file size must be less than 20 MB.");
-      input.value = "";
-      return;
-    }
+    // if (type === "image" && file.size > MAX_IMAGE_SIZE) {
+    //   this.showError("Image size must be less than 5 MB.");
+    //   input.value = "";
+    //   return;
+    // }
+    // if (type === "video" && file.size > MAX_VIDEO_SIZE) {
+    //   this.showError("Video file size must be less than 50 MB.");
+    //   input.value = "";
+    //   return;
+    // }
+    // if (type === "audio" && file.size > MAX_AUDIO_SIZE) {
+    //   this.showError("Audio file size must be less than 20 MB.");
+    //   input.value = "";
+    //   return;
+    // }
 
-    // 2. Media Duration Checks (Max 120 Seconds)
-    const MAX_DURATION_SECONDS = 120;
+    // // 2. Media Duration Checks (Max 120 Seconds)
+    // const MAX_DURATION_SECONDS = 120;
 
-    if (type === "video" || type === "audio") {
-      try {
-        const duration = await this.getMediaDuration(file, type);
-        if (duration > MAX_DURATION_SECONDS) {
-          this.showError(
-            `${type === "video" ? "Video" : "Audio"} length cannot exceed 2 minutes.`,
-          );
-          input.value = "";
-          return;
-        }
-      } catch (err) {
-        this.showError(
-          `Could not load ${type} metadata. Please try another file.`,
-        );
-        input.value = "";
-        return;
-      }
-    }
+    // if (type === "video" || type === "audio") {
+    //   try {
+    //     const duration = await this.getMediaDuration(file, type);
+    //     if (duration > MAX_DURATION_SECONDS) {
+    //       this.showError(
+    //         `${type === "video" ? "Video" : "Audio"} length cannot exceed 2 minutes.`,
+    //       );
+    //       input.value = "";
+    //       return;
+    //     }
+    //   } catch (err) {
+    //     this.showError(
+    //       `Could not load ${type} metadata. Please try another file.`,
+    //     );
+    //     input.value = "";
+    //     return;
+    //   }
+    // }
 
     // 3. Success Path: Clear errors and attach preview URL
     this.clearError();
