@@ -445,6 +445,47 @@
           </a>
         </div>
       </div>
+
+
+      <div class="pt-2">
+        <div>
+          <a
+            [routerLink]="['/', currentLang, 'daily-routine']"
+            routerLinkActive="w-full bg-[#960000] text-white font-medium"
+            (click)="resetLangToggle()"
+            (click)="sidebarService.setSidebarState(false)"
+            class="w-full hover:bg-gray-100 flex items-center space-x-2 px-3 py-2 font-medium text-[#960000] hover:text-gray-900 rounded-lg"
+          >
+            <div class="flex items-center space-x-2 hover:bg-gray-100">
+              <!-- <span>🏆</span> -->
+              <svg
+  xmlns="http://www.w3.org/2000/svg"
+  class="tm-icon tm-icon-routine-tasks"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  width="20"
+  height="20"
+>
+  <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+  <path d="m9 14 2 2 4-4" />
+</svg>
+
+              <span class="mt-2">
+                {{
+                  currentLang === "en"
+                    ? "Daily Routine"
+                    : "రోజువారీ దినచర్య"
+                }}
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
       <div class="pt-2">
         <div>
           <a
@@ -457,25 +498,22 @@
             <div class="flex items-center space-x-2 hover:bg-gray-100">
               <!-- <span>🏆</span> -->
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="tm-icon tm-icon-champion-cup"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                width="20"
-                height="20"
-              >
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                <path d="M4 22h16" />
-                <path d="M10 14.66V17c0 .55-.45 1-1 1H7" />
-                <path d="M14 14.66V17c0 .55.45 1 1 1h2" />
-                <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
-                <path d="M12 18v4" />
-              </svg>
+  xmlns="http://www.w3.org/2000/svg"
+  class="tm-icon tm-icon-leaderboard-medal"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  width="20"
+  height="20"
+>
+  <path d="M7.21 15 2.66 7.14a1 1 0 0 1 .13-1.22l2.99-3.01a1 1 0 0 1 1.22-.13L12 5.5l5-2.72a1 1 0 0 1 1.22.13l2.99 3.01a1 1 0 0 1 .13 1.22L16.79 15" />
+  <circle cx="12" cy="15" r="5" />
+  <path d="M12 13v4" />
+</svg>
+
               <span class="mt-2">
                 {{ currentLang === "en" ? "Leaderboard" : "లీడర్‌బోర్డ్" }}
               </span>
