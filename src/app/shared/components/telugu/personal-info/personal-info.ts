@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, DatePipe } from "@angular/common";
 import { Component, inject, ChangeDetectorRef } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -18,7 +18,9 @@ export interface PersonalDetails {
 
 @Component({
   selector: "app-personal-info",
+  standalone: true,
   imports: [CommonModule, FormsModule],
+  providers: [DatePipe],
   templateUrl: "./personal-info.html",
   styleUrl: "./personal-info.css",
   host: {
@@ -30,6 +32,8 @@ export class PersonalInfo {
   private toastService = inject(ToastService);
   private cd = inject(ChangeDetectorRef);
   private service = inject(Service);
+  private datePipe = inject(DatePipe);
+
   userId: any = "";
   details: any = {
     userId: "",
@@ -54,7 +58,8 @@ export class PersonalInfo {
     const urlSegments = this.router.url.split("/").filter(Boolean);
     return urlSegments[0] === "te" ? "Telugu" : "English";
   }
-  ngOnInit(): void {
+
+  ngOnInit(): void {    
     this.userId = Number(localStorage.getItem("userId")) || "";
     this.currentLanguage = this.authService.getUserLanguage();
     this.currentRoute = this.currentLanguage === "English" ? "en" : "te";
@@ -72,6 +77,7 @@ export class PersonalInfo {
           if (res.success && res.data) {
             this.isEditing = true;
             this.details = res.data;
+            // this.formattedBirthday = this.details.birthday;
             // this.details.gender == 'Male'
             //   ? 'పురుషుడు'
             //   : this.details.gender === 'Female'

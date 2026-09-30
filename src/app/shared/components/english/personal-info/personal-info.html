@@ -166,7 +166,7 @@
             *ngIf="editingField !== 'birthday'"
             class="text-base sm:text-lg font-bold text-gray-900"
           >
-            {{ details.birthday || '' }}
+            {{ (details.birthday | date: 'dd-MM-yyyy') || '' }}
           </div>
 
           <!-- Edit Mode -->

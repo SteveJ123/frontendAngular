@@ -167,15 +167,15 @@
           <!-- Display Mode -->
           <div
             *ngIf="editingField !== 'birthday'"
-            class="text-base sm:text-lg font-bold text-gray-900"
+            translate="no" class="text-base sm:text-lg font-bold text-gray-900 notranslate" 
           >
-            {{ details.birthday || '' }}
+            {{ (details.birthday | date: 'dd-MM-yyyy')  || '' }}
           </div>
 
           <!-- Edit Mode -->
           <div *ngIf="editingField === 'birthday'" class="mt-2 flex gap-2">
             <input
-              type="date"
+              type="date"              
               [(ngModel)]="details.birthday"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
             />
@@ -190,27 +190,7 @@
         </div>
       </div>
 
-      <!-- Right Side Info Card -->
-      <div
-        class="lg:col-span-5 bg-[#f3fab5] p-6 sm:p-8 rounded-3xl border border-gray-200/80 shadow-xs space-y-4"
-      >
-        <!-- Question Icon Circle -->
-        <div
-          class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs"
-        >
-          ?
-        </div>
-
-        <h3 class="text-lg sm:text-xl font-bold text-gray-900">
-          Personal details
-        </h3>
-
-        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed">
-          You can add your personal information here so that we can get to know
-          you better. Only your name, picture and the 'about you' section will
-          be visible to your audience!
-        </p>
-      </div>
+      <!-- Right Side Info Card -->      
     </div>
   </div>
 </div>
