@@ -164,7 +164,7 @@
           <!-- Display Mode -->
           <div
             *ngIf="editingField !== 'birthday'"
-            class="text-base sm:text-lg font-bold text-gray-900"
+            translate="no" class="text-base sm:text-lg font-bold text-gray-900 notranslate"
           >
             {{ (details.birthday | date: 'dd-MM-yyyy') || '' }}
           </div>
