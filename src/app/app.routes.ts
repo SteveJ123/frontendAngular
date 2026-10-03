@@ -9,13 +9,38 @@ import {
 // import { MainLayoutComponent } from "./main-layout.component";
 import { AppLayoutComponent } from "./shared/layout/app-layout/app-layout.component";
 import { Admin } from "../../src/app/shared/components/admin/admin";
+import { HomecomponentComponent } from "./shared/homecomponent/homecomponent.component";
+import { AboutComponent } from "./shared/about/about.component";
+import { ClassesComponent } from "./shared/classes/classes.component";
+import { PriceComponent } from "./shared/price/price.component";
+import { GalleryComponent } from "./shared/gallery/gallery.component";
+import { ContactComponent } from "./shared/contact/contact.component";
+import { MainLayoutComponent } from "./shared/main-layout/main-layout.component";
 
 export const routes: Routes = [
-  { path: "", redirectTo: "login", pathMatch: "full" },
+  // { path: "", redirectTo: "", pathMatch: "full" },
+  // {path: "", component: HomecomponentComponent},  
+  // {path: "about", component: AboutComponent},
+  // {path: "classes", component: ClassesComponent},
+  // {path: "pricing", component: PriceComponent},
+  // {path: "gallery", component: GalleryComponent},
+  // {path: "contact", component: ContactComponent},
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      { path: '', component: HomecomponentComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'classes', component: ClassesComponent },
+      { path: 'pricing', component: PriceComponent },
+      { path: 'gallery', component: GalleryComponent },
+      { path: 'contact', component: ContactComponent }
+    ]
+  },
 
   // Public Routes (No Header/Sidebar)
   { path: "login", component: Login, canActivate: [guestGuard] },
-  { path: "register", component: Register, canActivate: [guestGuard] },
+  { path: "register", component: Register, canActivate: [guestGuard] },  
   {
     path: "admin",
     component: Admin,

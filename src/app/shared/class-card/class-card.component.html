@@ -1,0 +1,57 @@
+<div class="group h-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+  <!-- Image & Badge Container -->
+  <div class="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
+    <img
+      [src]="classData.image"
+      [alt]="classData.title + ' yoga class'"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+    />
+    <span
+      class="absolute top-4 right-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-wide shadow-sm"
+      [ngClass]="getDifficultyClass()"
+    >
+      {{ classData.difficulty }}
+    </span>
+  </div>
+
+  <!-- Header -->
+  <div class="p-5 sm:p-6 pb-2 sm:pb-3">
+    <h3 class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white line-clamp-1">
+      {{ classData.title }}
+    </h3>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+      {{ classData.description }}
+    </p>
+  </div>
+
+  <!-- Content & Footer (Pushed to bottom) -->
+  <div class="p-5 sm:p-6 pt-0 mt-auto space-y-4">
+    <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 dark:slate-400">
+      <!-- Duration -->
+      <div class="flex items-center gap-1.5">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke-width="2"/>
+          <polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>{{ classData.duration }}</span>
+      </div>
+
+      <!-- Students Count -->
+      <div *ngIf="students" class="flex items-center gap-1.5">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span>{{ students }} students</span>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <button
+      type="button"
+      (click)="onJoinClass()"
+      class="w-full inline-flex items-center justify-center rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm h-10 px-4 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-sm"
+    >
+      Join Class
+    </button>
+  </div>
+</div>

@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-background text-foreground flex flex-col">
+  <!-- Navbar Component -->
+  <!-- <app-navbar></app-navbar> -->
+
+  <!-- Hero Section -->
+  <section class="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 bg-slate-100/60 dark:bg-slate-900/40">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto space-y-4 animate-fade-in">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white">
+          Choose Your Plan
+        </h1>
+        <p class="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+          Start your wellness journey today with a plan that fits your lifestyle. 
+          All plans include access to our supportive community.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Cards Section -->
+  <section class="py-12 sm:py-16 md:py-20">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto items-stretch">
+        <div 
+          *ngFor="let plan of plans" 
+          class="animate-slide-up h-full"
+        >
+          <app-pricing-card [planData]="plan"></app-pricing-card>
+        </div>
+      </div>
+
+      <!-- Money-Back Guarantee -->
+      <div class="text-center mt-8 sm:mt-12 animate-fade-in">
+        <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-full border border-emerald-500/20">
+          <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+          <span class="text-xs sm:text-sm font-semibold">30-day money-back guarantee</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table Section -->
+  <section class="py-12 sm:py-16 md:py-20 bg-slate-100/60 dark:bg-slate-900/40">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-slate-900 dark:text-white">
+          Compare Plans
+        </h2>
+
+        <!-- Responsive Table Container -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+          <table class="w-full text-left text-sm border-collapse min-w-[500px]">
+            <thead class="bg-emerald-600 text-white">
+              <tr>
+                <th scope="col" class="p-4 sm:p-5 font-semibold text-sm sm:text-base">Feature</th>
+                <th scope="col" class="p-4 sm:p-5 text-center font-semibold text-sm sm:text-base">Free Trial</th>
+                <th scope="col" class="p-4 sm:p-5 text-center font-semibold text-sm sm:text-base">Standard</th>
+                <th scope="col" class="p-4 sm:p-5 text-center font-semibold text-sm sm:text-base">Premium</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td class="p-4 sm:p-5 font-medium">Recorded Sessions</td>
+                <td class="p-4 sm:p-5 text-center">3</td>
+                <td class="p-4 sm:p-5 text-center font-medium text-emerald-600 dark:text-emerald-400">Unlimited</td>
+                <td class="p-4 sm:p-5 text-center font-medium text-emerald-600 dark:text-emerald-400">Unlimited</td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td class="p-4 sm:p-5 font-medium">Live Classes</td>
+                <td class="p-4 sm:p-5 text-center">1</td>
+                <td class="p-4 sm:p-5 text-center">5/month</td>
+                <td class="p-4 sm:p-5 text-center font-medium text-emerald-600 dark:text-emerald-400">Unlimited</td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td class="p-4 sm:p-5 font-medium">Progress Tracking</td>
+                <td class="p-4 sm:p-5 text-center">
+                  <svg class="w-5 h-5 mx-auto text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </td>
+                <td class="p-4 sm:p-5 text-center">
+                  <svg class="w-5 h-5 mx-auto text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </td>
+                <td class="p-4 sm:p-5 text-center">
+                  <svg class="w-5 h-5 mx-auto text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td class="p-4 sm:p-5 font-medium">1-on-1 Consultation</td>
+                <td class="p-4 sm:p-5 text-center text-slate-400">-</td>
+                <td class="p-4 sm:p-5 text-center text-slate-400">-</td>
+                <td class="p-4 sm:p-5 text-center">
+                  <svg class="w-5 h-5 mx-auto text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td class="p-4 sm:p-5 font-medium">Personalized Plans</td>
+                <td class="p-4 sm:p-5 text-center text-slate-400">-</td>
+                <td class="p-4 sm:p-5 text-center text-slate-400">-</td>
+                <td class="p-4 sm:p-5 text-center">
+                  <svg class="w-5 h-5 mx-auto text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs Section -->
+  <section class="py-12 sm:py-16 md:py-20">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-slate-900 dark:text-white">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4 sm:space-y-6">
+          <div 
+            *ngFor="let faq of faqs" 
+            class="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm transition-all hover:shadow-md animate-slide-up"
+          >
+            <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 text-slate-900 dark:text-white">
+              {{ faq.question }}
+            </h3>
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              {{ faq.answer }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Component -->
+  <!-- <app-footer></app-footer> -->
+</div>

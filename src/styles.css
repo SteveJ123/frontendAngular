@@ -137,3 +137,37 @@ swiper-container {
   width: 12px !important;
   border-radius: 4px !important;
 }
+
+@layer utilities {
+  /* Keyframe Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px); /* Increased distance for a smoother entry */
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Utility Classes with Slower & Smoother Transitions */
+  .animate-fade-in {
+    /* Increased from 0.6s to 1.2s with a smoother ease-in-out curve */
+    animation: fadeIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .animate-slide-up {
+    /* Increased from 0.6s to 1.4s for a slow, premium movement */
+    animation: slideUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
