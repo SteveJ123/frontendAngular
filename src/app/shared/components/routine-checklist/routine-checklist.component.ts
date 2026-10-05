@@ -27,7 +27,7 @@ export class RoutineChecklistComponent {
 
   @Input() userId!: number;
   @Input() selectedDate!: string;
-  @Input() language: string = "english";
+  @Input() language: string = "";
 
   @Output() backToCalendar = new EventEmitter<void>();
 
@@ -35,6 +35,10 @@ export class RoutineChecklistComponent {
   loading: boolean = false;
   recordId: any = "";
   private router = inject(Router);
+
+
+  // Helper function to extract YYYY-MM-DD in IST timezone
+
   get currentRouteLanguage(): string {
     const urlSegments = this.router.url.split("/").filter(Boolean);
     return urlSegments[0] === "te" ? "Telugu" : "English";
@@ -44,13 +48,53 @@ export class RoutineChecklistComponent {
     this.fetchTasksForDate();
   }
 
+//   getISTDateString(dateInput:any) {
+//   const d = dateInput ? new Date(dateInput) : new Date();
+//   const formatter = new Intl.DateTimeFormat("en-CA", {
+//     timeZone: "Asia/Kolkata",
+//     year: "numeric",
+//     month: "2-digit",
+//     day: "2-digit",
+//   });
+//   return formatter.format(d); // Returns "YYYY-MM-DD"
+// }
+
+getISTDateString(dateInput: any): string {
+  if (!dateInput) return "";
+
+  // If already a "YYYY-MM-DD" string, return directly to prevent UTC shift
+  if (typeof dateInput === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+    return dateInput;
+  }
+
+  const d = new Date(dateInput);
+
+  // Extract local date components directly if it's a JS Date object from calendar picker
+  if (dateInput instanceof Date && !isNaN(d.getTime())) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  return formatter.format(d);
+}
+
   fetchTasksForDate() {
     this.loading = true;
+    let updatedDate = this.getISTDateString(this.selectedDate)
     this.routineService
-      .getRoutinesByDate(this.userId, this.selectedDate, this.language)
+      .getRoutinesByDate(this.userId, updatedDate, this.language)
       .subscribe({
         next: (data: any) => {
           // this.tasks = data.routines;
+          console.log("data", data)
           this.recordId = data.id;
           let parsedRoutines = data.routines;
 
@@ -65,6 +109,7 @@ export class RoutineChecklistComponent {
           }
 
           this.tasks = parsedRoutines;
+          console.log("this.tasks", this.tasks)
           this.loading = false;
           this.cd.detectChanges();
         },
@@ -80,13 +125,14 @@ export class RoutineChecklistComponent {
     const updatedStatus = !task.isCompleted;
     // this.recordId = task.id;
     let payload = {
-      taskIndex: i,
+      taskIndex: Number(i),
       isCompleted: updatedStatus,
     };
     this.routineService
       .toggleRoutineCompletion(this.recordId, payload)
       .subscribe({
-        next: () => {
+        next: (data) => {
+          console.log("update list data", data);
           task.isCompleted = updatedStatus;
           this.cd.detectChanges();
         },
