@@ -5,12 +5,12 @@
       (click)="onBack()"
       class="flex items-center space-x-2 text-sm font-bold text-[#960000] hover:text-blue-800 px-3 py-2 rounded-md transition-colors"
     >
-      <span>&larr; Back to Calendar</span>
+      <span>&larr; {{currentRouteLanguage === 'Telugu' ? 'క్యాలెండర్‌కి తిరిగి వెళ్ళు' : 'Back to Calendar'}}</span>
     </button>
     <div class="text-right">
-      <h2 class="text-lg font-bold text-[#960000]">Daily Checklist</h2>
+      <h2 class="text-lg font-bold text-[#960000]">{{currentRouteLanguage === 'Telugu' ? 'ప్రతిరోజూ చేయవలసిన పనులు' : 'Daily Checklist'}}</h2>
       <span class="text-xs text-[#960000] font-semibold"
-        >Date: {{ selectedDate }}</span
+        >{{currentRouteLanguage === 'Telugu' ? 'తేదీ' : 'Date'}}: {{ selectedDate }} </span
       >
     </div>
   </div>
@@ -42,9 +42,9 @@
             {{ item.time }}
           </span>
           <p
-            class="text-sm font-medium mt-1 text-[#960000]"
+            class="text-sm font-medium mt-1 text-[#960000]"            
             [class.line-through]="item.isCompleted"
-            [class.text-gray-400]="item.isCompleted"
+            
           >
             {{ item.task }}
           </p>
@@ -55,7 +55,7 @@
         *ngIf="item.isCompleted"
         class="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded"
       >
-        Completed ✓
+        {{currentRouteLanguage === 'Telugu' ? 'పూర్తయింది': 'Completed'}} ✓
       </span>
     </div>
   </div>

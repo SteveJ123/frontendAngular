@@ -12,6 +12,8 @@ import {
   CalendarEvent,
   CalendarView,
   CalendarDateFormatter,
+  CalendarUtils,
+  CalendarA11y,
 } from "angular-calendar";
 import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 import { CustomDateFormatter } from "./customDateFormatter";
@@ -35,14 +37,14 @@ registerLocaleData(localeTe);
     CalendarMonthViewComponent,
   ],
   providers: [
-    provideCalendar({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
-    {
-      provide: CalendarDateFormatter,
-      useClass: CustomDateFormatter,
+    { provide: DateAdapter,
+      useFactory: adapterFactory
+      
     },
+    CalendarUtils,
+    CalendarA11y,
+    CalendarDateFormatter,  
+  
   ],
   templateUrl: "./daily-tracker.html",
   host: {

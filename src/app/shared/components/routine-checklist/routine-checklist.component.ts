@@ -9,6 +9,7 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Service } from "../../../shared/services/service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-routine-checklist",
@@ -33,6 +34,12 @@ export class RoutineChecklistComponent {
   tasks: any[] = [];
   loading: boolean = false;
   recordId: any = "";
+  private router = inject(Router);
+  get currentRouteLanguage(): string {
+    const urlSegments = this.router.url.split("/").filter(Boolean);
+    return urlSegments[0] === "te" ? "Telugu" : "English";
+  }
+
   ngOnInit() {
     this.fetchTasksForDate();
   }

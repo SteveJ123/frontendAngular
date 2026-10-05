@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, registerLocaleData } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 import {
@@ -17,8 +17,12 @@ import {
 } from "angular-calendar";
 import { Service } from "../../../shared/services/service";
 import { RoutineChecklistComponent } from "../../components/routine-checklist/routine-checklist.component";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import localeTe from "@angular/common/locales/te";
+import { AuthService } from "../../services/AuthService";
 
+// Register Telugu locale data
+registerLocaleData(localeTe);
 @Component({
   selector: "app-daily-routine",
   standalone: true,
@@ -52,6 +56,10 @@ export class DailyRoutineComponent {
   view: CalendarView = CalendarView.Month;
   events: CalendarEvent[] = [];
 
+  // Language tracking properties
+  locale: string = 'en-US'; // Default Angular date locale code
+  // selectedLanguage: string = 'english'; // API / Child component language key
+
   userId: number = 1; // Logged-in user ID
   selectedLanguage = "";
   selectedDate: string = "";
@@ -60,16 +68,34 @@ export class DailyRoutineComponent {
   showChecklistView: boolean = false;
 
   private router = inject(Router);
-
+  private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
+  userType:any = "";
   get currentRouteLanguage(): string {
     const urlSegments = this.router.url.split("/").filter(Boolean);
     return urlSegments[0] === "te" ? "Telugu" : "English";
   }
 
   ngOnInit() {
+    this.userType = this.authService.getUserRole();
+    console.log("this.userType", this.userType)
     this.selectedDate = this.getISTDateString(new Date());
     this.selectedLanguage = this.currentRouteLanguage.toLowerCase();
     this.loadMonthlyRoutines();
+    this.updateLanguage(this.currentRouteLanguage);
+    
+  }
+
+  updateLanguage(langCode: string | null): void {
+    console.log("langCode", langCode)
+    if (langCode === 'Telugu') {
+      this.locale = 'te'; // Sets Angular date pipe and calendar locale to Telugu
+      this.selectedLanguage = 'telugu';
+    } else {
+      this.locale = 'en-US'; // Sets locale to English
+      this.selectedLanguage = 'english';
+    }
+    // this.loadMonthlyRoutines();
   }
 
   // Convert Date object to IST YYYY-MM-DD

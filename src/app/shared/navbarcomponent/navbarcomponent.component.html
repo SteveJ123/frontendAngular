@@ -1,9 +1,9 @@
-<nav class="fixed top-0 left-0 right-0 z-50 bg-[#f4f3ef] border-b border-[#e2e0d8] shadow-sm">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-[#f3fab5] border-b border-[#e2e0d8] shadow-sm">
   <div class="container mx-auto px-4">
     <div class="flex items-center justify-between h-16">
       
       <!-- Logo -->
-      <a routerLink="/" class="font-heading text-2xl font-bold text-primary">
+      <a routerLink="/" class="font-heading text-2xl font-bold text-[#960000]">
         Young Happy And Healthy
       </a>
 
@@ -13,8 +13,8 @@
         <a
           *ngFor="let link of navLinks"
           [routerLink]="link.path"
-          routerLinkActive="text-primary"          
-          class="text-sm font-medium transition-colors hover:text-primary text-foreground/70"
+          routerLinkActive="text-[#960000]"          
+          class="text-sm font-medium transition-colors hover:text-[#960000] text-[#960000]"
         >
           {{ link.name }}
         </a>
@@ -24,7 +24,7 @@
       <div class="hidden md:block">
         <a
           routerLink="/login"
-          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-[#960000] hover:bg-primary/90 h-9 px-4 py-2"
         >
           Login
         </a>
@@ -79,19 +79,19 @@
       <a
         *ngFor="let link of navLinks"
         [routerLink]="link.path"
-        routerLinkActive="text-primary"        
+        routerLinkActive="text-[#960000]"        
         (click)="closeMenu()"
-        class="block py-2 text-sm font-medium transition-colors hover:text-primary text-foreground/70"
+        class="block py-2 text-sm font-medium transition-colors hover:text-[#960000] text-[#960000]"
       >
         {{ link.name }}
       </a>
       
       <a
-        routerLink="/dashboard"
+        routerLink="/login"
         (click)="closeMenu()"
-        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 w-full"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-[#960000]-foreground hover:bg-primary/90 h-9 px-4 py-2 w-full"
       >
-        My Dashboard
+        Login
       </a>
     </div>
   </div>

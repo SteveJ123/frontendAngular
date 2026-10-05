@@ -446,7 +446,7 @@
         </div>
       </div>
 
-
+@if (userRole.trim().toLowerCase() === "user") {
       <div class="pt-2">
         <div>
           <a
@@ -486,6 +486,7 @@
           </a>
         </div>
       </div>
+      }
       <div class="pt-2">
         <div>
           <a

@@ -13,7 +13,7 @@
   <div *ngIf="!showChecklistView">
     <!-- Header Controls -->
     <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2" *ngIf="userType === 'admin'">
         <label class="font-bold text-gray-700">Language / భాష:</label>
         <select
           [(ngModel)]="selectedLanguage"
@@ -33,7 +33,7 @@
           (viewDateChange)="loadMonthlyRoutines()"
           class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm font-semibold"
         >
-          Prev
+        {{currentRouteLanguage === "Telugu" ? 'మునుపటి' : 'Prev'}}
         </button>
         <!-- <button
           mwlCalendarToday
@@ -50,12 +50,12 @@
           (viewDateChange)="loadMonthlyRoutines()"
           class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm font-semibold"
         >
-          Next
+          {{currentRouteLanguage === 'Telugu' ? 'అవతల' : 'Next'}}
         </button>
       </div>
 
       <h3 class="text-xl font-bold text-gray-800">
-        {{ viewDate | date: "MMMM yyyy" }}
+        {{ viewDate | date: "MMMM yyyy" : "" : locale }}
       </h3>
     </div>
 
@@ -63,6 +63,7 @@
     <mwl-calendar-month-view
       [viewDate]="viewDate"
       [events]="events"
+      [locale]="locale"
       (dayClicked)="onDayClicked($event.day)"
     >
     </mwl-calendar-month-view>
