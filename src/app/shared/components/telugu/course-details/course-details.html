@@ -105,15 +105,15 @@
           <div
             class="w-full overflow-hidden rounded-lg bg-black/5"
             *ngIf="lecture.videoUrl"
-          >
-            <video
-              controls
-              preload="metadata"
-              class="w-[1920px] h-[600px] rounded-lg object-contain"
-            >
-              <source [src]="lecture.videoUrl" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+          >            
+            
+            <video                  
+                  controls
+                  preload="metadata"
+                  class="w-[1920px] h-[600px] rounded-lg object-contain"
+                >
+                  <source [src]="lecture.videoUrl" />
+                </video>
           </div>
         </div>
       </div>
