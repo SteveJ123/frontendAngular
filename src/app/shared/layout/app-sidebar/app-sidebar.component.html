@@ -522,6 +522,48 @@
           </a>
         </div>
       </div>
+
+      @if (userRole.trim().toLowerCase() === "admin") {
+      <div class="pt-2">
+        <div>
+          <a
+            [routerLink]="['/', currentLang, 'bhagavatgitainpracticallife']"
+            routerLinkActive="w-full bg-[#960000] text-white font-medium"
+            (click)="resetLangToggle()"
+            (click)="sidebarService.setSidebarState(false)"
+            class="w-full hover:bg-gray-100 flex items-center space-x-2 px-3 py-2 font-medium text-[#960000] hover:text-gray-900 rounded-lg"
+          >
+            <div class="flex items-center space-x-2 hover:bg-gray-100">
+              <!-- <span>🏆</span> -->
+              <svg
+  xmlns="http://www.w3.org/2000/svg"
+  class="tm-icon tm-icon-routine-tasks"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  width="20"
+  height="20"
+>
+  <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+  <path d="m9 14 2 2 4-4" />
+</svg>
+
+              <span class="mt-2">
+                {{
+                  currentLang === "en"
+                    ? "bhagavatgita in practical life"
+                    : "bhagavatgita in practical life"
+                }}
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+      }
     </nav>
   </div>
 </aside>

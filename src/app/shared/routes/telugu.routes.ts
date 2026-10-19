@@ -25,6 +25,7 @@ import { AdminDailyRoutineComponent } from "../components/admin-daily-routine/ad
 import { DailyRoutineComponent } from "../components/daily-routine/daily-routine.component";
 import { RoutineChecklistComponent } from "../components/routine-checklist/routine-checklist.component";
 import { LeaderboardComponent } from "../../leaderboard/leaderboard.component";
+import { BhagavatgitainpracticallifelistComponent } from "../components/bhagavatgitainpracticallifelist/bhagavatgitainpracticallifelist.component";
 
 export const TELUGU_ROUTES: Routes = [
   { path: "", redirectTo: "login", pathMatch: "full" },
@@ -161,6 +162,12 @@ export const TELUGU_ROUTES: Routes = [
     data: { roles: ["admin"] },
   },
   { path: "nutrition/:id", component: NutritionDetails },
+  {
+    path: "bhagavatgitainpracticallife",
+    component: BhagavatgitainpracticallifelistComponent,
+    canMatch: [roleGuard],
+    data: { roles: ["admin"] },
+  },
   // { path: 'progress', component: Progress },
   { path: "**", component: Notfound },
 ];
