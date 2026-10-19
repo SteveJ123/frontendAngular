@@ -34,7 +34,7 @@ export class Team implements OnInit {
   paginatedUsers: any[] = [];
 
   courseOptions: string[] = ["Face Yoga", "Face Yoga + Raj Yoga"];
-  pageSizeOptions: number[] = [5, 10, 20];
+  pageSizeOptions: number[] = [5, 10, 20, 30, 40, 50, 100 ];
 
   selectedCourse: string = "";
   searchName: string = "";

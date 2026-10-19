@@ -71,6 +71,7 @@
         class="bg-[#f3fab5] border-b border-gray-200 text-xs uppercase text-gray-500 tracking-wider"
       >
         <tr>
+          <th scope="col" class="px-6 py-4">No</th>
           <th scope="col" class="px-6 py-4">Username</th>
           <th scope="col" class="px-6 py-4">Mobile</th>
           <th scope="col" class="px-6 py-4">Role</th>
@@ -80,9 +81,12 @@
       </thead>
       <tbody class="divide-y divide-gray-100">
         <tr
-          *ngFor="let user of paginatedUsers"
+          *ngFor="let user of paginatedUsers; let i = index;"
           class="hover:bg-gray-50 transition-colors"
         >
+        <td class="px-6 py-4 font-medium text-gray-900">
+            {{ (currentPage - 1) * pageSize + i + 1 }}
+          </td>
           <td class="px-6 py-4 font-medium text-gray-900">
             {{ user.username }}
           </td>
