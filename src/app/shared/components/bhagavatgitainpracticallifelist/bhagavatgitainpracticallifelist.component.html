@@ -37,6 +37,20 @@
       </select>
     </div>
 
+    <div>
+      <label class="block text-xs font-semibold text-gray-600 mb-1">WhatsApp Status</label>
+      <select 
+        [(ngModel)]="selectedWhatsAppStatus" 
+        (change)="applyFilters()" 
+        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none text-sm bg-[#f3fab5]">
+        <option value="">All WhatsApp Statuses</option>
+        <option value="paid_joined">Paid & Joined WhatsApp</option>
+        <option value="paid_not_joined">Paid & Not Joined WhatsApp</option>
+        <option value="pending_joined">Pending & Joined WhatsApp</option>
+        <option value="pending_not_joined">Pending & Not Joined WhatsApp</option>
+      </select>
+    </div>
+
     <!-- Month Filter -->
     <div>
       <label class="block text-xs font-semibold text-gray-600 mb-1">Filter by Month</label>
@@ -73,7 +87,40 @@
         <option value="2024">2024</option>
       </select>
     </div>
+
+    
+<div>
+  <label class="block text-xs font-semibold text-gray-600 mb-1">
+    Filter by Language
+  </label>
+
+  <select
+    [(ngModel)]="selectedLanguage"
+    (change)="applyFilters()"
+    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none text-sm bg-[#f3fab5]">
+
+    <option value="">All Languages</option>
+    <option *ngFor="let language of languages" [value]="language">
+      {{ language }}
+    </option>
+  </select>
+</div>
+    <div class="">
+        <label for="pageSize" class="block text-xs font-semibold text-gray-600 mb-1">Per page:</label>
+        <select 
+          id="pageSize"
+          [(ngModel)]="pageSize" 
+          (change)="onPageSizeChange()" 
+          class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none text-sm bg-[#f3fab5]">
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+        </select>
+      </div>
   </div>
+
+  
 
   <!-- Table -->
   <div class="overflow-x-auto border border-gray-200 rounded-lg">
@@ -84,7 +131,9 @@
           <th scope="col" class="px-6 py-4">Full Name</th>
           <th scope="col" class="px-6 py-4">Email</th>
           <th scope="col" class="px-6 py-4">Mobile</th>
+          <th scope="col" class="px-6 py-4">Language</th>
           <th scope="col" class="px-6 py-4">Status</th>
+          <th scope="col" class="px-6 py-4 text-center">WA Joined</th>
           <th scope="col" class="px-6 py-4">Registered Date</th>
         </tr>
       </thead>
@@ -96,10 +145,18 @@
           <td class="px-6 py-4 font-medium text-gray-900">{{ user.fullName }}</td>
           <td class="px-6 py-4">{{ user.email }}</td>
           <td class="px-6 py-4">{{ user.whatsappNumber }}</td>
+          <td class="px-6 py-4">{{user.language}}</td>
           <td class="px-6 py-4">
             <span [ngClass]="user.payment_status === 'paid' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'" class="px-2.5 py-0.5 rounded-full text-xs font-medium uppercase">
               {{ user.payment_status }}
             </span>
+          </td>          
+          <td class="px-6 py-4 text-center">
+            <input 
+              type="checkbox" 
+              [checked]="user.whatsapp_joined" 
+              (change)="toggleWhatsAppStatus(user)"
+              class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer">
           </td>
           <td class="px-6 py-4">{{ user.created_at | date:'medium' }}</td>
         </tr>

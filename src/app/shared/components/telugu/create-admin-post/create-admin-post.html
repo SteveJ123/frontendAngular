@@ -19,6 +19,7 @@
         class="bg-[#f3fab5] p-3.5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between space-x-3"
         (click)="userType !== 'user' && openModal()"
       >
+      @if(userType === 'admin'){
         <div class="w-9 h-9 rounded-full bg-gray-200 shrink-0 overflow-hidden">
           <img
             [src]="adminProfile ? adminProfile : 'user_post.png'"
@@ -26,15 +27,19 @@
             class="w-full h-full object-cover"
           />
         </div>
-        <input
+        
+          <input
           type="text"
           placeholder="మీ భావాలను మరియు ఆలోచనలను వ్యక్తపరచండి"
           class="w-full bg-transparent text-sm focus:outline-none text-gray-700"
           [disabled]="userType == 'user'"
         />
+        
+        
         <button class="text-gray-400 hover:text-gray-600 text-xl font-light">
           +
         </button>
+        }
         <!-- MODAL OVERLAY BACKDROP -->
         <div
           *ngIf="isOpen()"

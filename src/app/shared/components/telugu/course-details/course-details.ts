@@ -8,6 +8,7 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Service } from "../../../services/service";
 import { ToastService } from "../../../services/toast.service";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 @Component({
   selector: "app-course-details",
@@ -37,10 +38,35 @@ export class CourseDetails {
   productToDeleteId: any = "";
   showDeleteModal: boolean = false;
 
+  // rawUrl = 'https://youtu.be/-7q7cu0FRyY?si=BzluBYDN4rEE4XFX';
+  safeVideoUrl!: SafeResourceUrl;
+
+  // constructor(private sanitizer: DomSanitizer) {
+  //   this.safeVideoUrl = this.getSafeEmbedUrl(this.rawUrl);
+  // }
+
+  // Check if the URL belongs to YouTube
+  isYouTubeUrl(url: string): boolean {
+    if (!url) return false;
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  }
+
+  getSafeEmbedUrl(url: string): SafeResourceUrl {
+    // Extract the video ID (e.g., -7q7cu0FRyY) from standard or short links
+    const videoId = this.extractVideoId(url);
+    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    
+    // Bypass Angular's security check for iframe sources
+    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+  }
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-  ) {}
+    private sanitizer: DomSanitizer
+  ) {
+    // this.safeVideoUrl = this.getSafeEmbedUrl(this.rawUrl);
+  }
 
   private router = inject(Router);
   private cd = inject(ChangeDetectorRef);
@@ -56,6 +82,12 @@ export class CourseDetails {
     if (this.courseId) {
       this.fetchCourseDetails();
     }
+  }
+
+  private extractVideoId(url: string): string {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : '';
   }
 
   fetchCourseDetails(): void {

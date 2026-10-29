@@ -105,15 +105,31 @@
           <div
             class="w-full overflow-hidden rounded-lg bg-black/5"
             *ngIf="lecture.videoUrl"
-          >            
-            
-            <video                  
-                  controls
-                  preload="metadata"
-                  class="w-[1920px] h-[600px] rounded-lg object-contain"
-                >
-                  <source [src]="lecture.videoUrl" />
-                </video>
+          > 
+  <div *ngIf="isYouTubeUrl(lecture.videoUrl); else directVideoPlayer" class="relative w-full aspect-video rounded-lg overflow-hidden shadow-md bg-black">
+    <iframe 
+      class="absolute top-0 left-0 w-full h-full"
+      [src]="getSafeEmbedUrl(lecture.videoUrl)" 
+      [title]="lecture.title || 'YouTube video player'" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      referrerpolicy="strict-origin-when-cross-origin" 
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- CASE B: Direct Video File (HTML5 <video> tag with 16:9 responsive aspect ratio) -->
+  <ng-template #directVideoPlayer>
+    <div class="relative w-full aspect-video rounded-lg overflow-hidden shadow-md bg-black">
+      <video 
+        controls
+        preload="metadata"
+        class="absolute top-0 left-0 w-full h-full object-contain">
+        <source [src]="lecture.videoUrl" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </ng-template>
           </div>
         </div>
       </div>

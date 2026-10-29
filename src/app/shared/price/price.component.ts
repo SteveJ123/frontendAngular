@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PricingCardComponent } from '../pricing-card/pricing-card.component';
+import { Meta, Title } from '@angular/platform-browser';
 
 export interface FAQItem {
   question: string;
@@ -81,4 +82,28 @@ export class PriceComponent {
       answer: 'Live sessions include real-time instruction, the ability to ask questions, and personalized feedback from our instructor.'
     }
   ];
+
+  constructor(private titleService: Title, private metaService: Meta) {}
+
+  ngOnInit() {
+    // 1. Set optimized browser tab title for the Pricing page
+    this.titleService.setTitle('Pricing Plans & Subscriptions | Young Happy And Healthy');
+
+    // 2. Set SEO Meta Description
+    this.metaService.updateTag({ 
+      name: 'description', 
+      content: 'Choose an affordable yoga and wellness plan that fits your lifestyle. Start a 7-day free trial or upgrade to Standard and Premium for unlimited live classes and 1-on-1 coaching.' 
+    });
+
+    // 3. OpenGraph Tags (for Facebook, LinkedIn, Discord sharing)
+    this.metaService.updateTag({ property: 'og:title', content: 'Yoga Pricing Plans & Free Trial | Young Happy And Healthy' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Explore our flexible pricing plans including a 7-day free trial, unlimited classes, and personalized wellness coaching.' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://yoursite.com/assets/images/pricing-hero.jpg' });
+    this.metaService.updateTag({ property: 'og:type', content: 'website' });
+
+    // 4. Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Pricing Plans | Young Happy And Healthy' });
+    this.metaService.updateTag({ name: 'twitter:description', content: 'Start your yoga and mindfulness journey today with our flexible pricing plans and 7-day free trial.' });
+  }
 }

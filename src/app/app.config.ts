@@ -3,7 +3,8 @@ import {
   provideZoneChangeDetection,
   importProvidersFrom,
 } from "@angular/core";
-import { provideRouter, withHashLocation } from "@angular/router";
+//  withHashLocation 
+import { provideRouter} from "@angular/router";
 
 // import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 // import { provideRouter, withHashLocation } from '@angular/router';
@@ -19,7 +20,7 @@ import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, withHashLocation()),
+    provideRouter(routes),
     importProvidersFrom(
       CalendarModule.forRoot({
         provide: DateAdapter,

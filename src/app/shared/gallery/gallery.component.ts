@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestimonialCardComponent } from '../testimonial-card/testimonial-card.component';
+import { Meta, Title } from '@angular/platform-browser';
 
 export interface GalleryImage {
   src: string;
@@ -61,4 +62,28 @@ export class GalleryComponent {
       rating: 5
     }
   ];
+
+  constructor(private titleService: Title, private metaService: Meta) {}
+
+  ngOnInit() {
+    // 1. Set optimized browser tab title for the Gallery & Testimonials page
+    this.titleService.setTitle('Student Gallery & Testimonials | Young Happy And Healthy');
+
+    // 2. Set SEO Meta Description
+    this.metaService.updateTag({ 
+      name: 'description', 
+      content: 'Explore studio moments, community highlights, and read real student testimonials and success stories from our online yoga and wellness platform.' 
+    });
+
+    // 3. OpenGraph Tags (for Facebook, LinkedIn, Discord sharing)
+    this.metaService.updateTag({ property: 'og:title', content: 'Student Gallery & Success Stories | Young Happy And Healthy' });
+    this.metaService.updateTag({ property: 'og:description', content: 'See inspiring moments from our yoga studio classes and read genuine reviews from our global wellness community.' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://yoursite.com/assets/images/hero-yoga.jpg' });
+    this.metaService.updateTag({ property: 'og:type', content: 'website' });
+
+    // 4. Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Community Gallery & Testimonials | Young Happy And Healthy' });
+    this.metaService.updateTag({ name: 'twitter:description', content: 'Read reviews and explore yoga studio moments from our thriving student community.' });
+  }
 }

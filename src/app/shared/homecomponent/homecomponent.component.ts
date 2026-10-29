@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarcomponentComponent } from '../navbarcomponent/navbarcomponent.component';
 import { ClassCardComponent } from '../class-card/class-card.component';
 import { CommonModule } from '@angular/common';
 import { TestimonialCardComponent } from '../testimonial-card/testimonial-card.component';
+import { Title, Meta } from '@angular/platform-browser';
 
 export interface ClassItem {
   id: string;
   title: string;
   level: string;
-  description:string;
+  description: string;
   duration: string;
   image: string;
   instructor: string;
@@ -34,7 +35,7 @@ export interface Testimonial {
   styleUrl: './homecomponent.component.css',
   templateUrl: './homecomponent.component.html',
 })
-export class HomecomponentComponent {
+export class HomecomponentComponent implements OnInit {
   featuredClasses: ClassItem[] = [
     {
       id: '1',
@@ -111,4 +112,28 @@ export class HomecomponentComponent {
       avatar: 'assets/images/avatar-3.jpg'
     }
   ];
+
+  constructor(private titleService: Title, private metaService: Meta) { }
+
+  ngOnInit() {
+    // 1. Set optimized browser tab title for SEO & branding
+    this.titleService.setTitle('Young Happy And Healthy | Online Yoga Classes & Wellness Community');
+
+    // 2. Set high-converting meta description and OpenGraph social tags
+    this.metaService.updateTag({
+      name: 'description',
+      content: 'Transform your mind and body with expert-led online yoga classes, live Vinyasa flow sessions, meditation, and a global wellness community. Start your 7-day free trial today!'
+    });
+
+    // OpenGraph Tags (for Facebook, LinkedIn, Discord previews)
+    this.metaService.updateTag({ property: 'og:title', content: 'Young Happy And Healthy | Online Yoga & Wellness' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Join live yoga sessions, expert-guided meditation, and improve your holistic health with Young Happy And Healthy.' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://yoursite.com/assets/images/hero-yoga.jpg' });
+    this.metaService.updateTag({ property: 'og:type', content: 'website' });
+
+    // Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Young Happy And Healthy | Online Yoga Classes' });
+    this.metaService.updateTag({ name: 'twitter:description', content: 'Transform your body and mind with our expert-led yoga and mindfulness classes.' });
+  }
 }

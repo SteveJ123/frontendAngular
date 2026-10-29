@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ClassCardComponent } from '../class-card/class-card.component';
+import { Meta, Title } from '@angular/platform-browser';
 
 export type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -85,4 +86,28 @@ export class ClassesComponent {
       students: 176
     }
   ];
+
+  constructor(private titleService: Title, private metaService: Meta) {}
+
+  ngOnInit() {
+    // 1. Set optimized browser tab title for the Classes page
+    this.titleService.setTitle('Online Yoga Classes & Sessions | Young Happy And Healthy');
+
+    // 2. Set SEO Meta Description
+    this.metaService.updateTag({ 
+      name: 'description', 
+      content: 'Explore our wide range of online yoga classes, from beginner Hatha and Vinyasa Flow to advanced Power Yoga, meditation, and restorative sessions.' 
+    });
+
+    // 3. OpenGraph Tags (for Facebook, LinkedIn, Discord sharing)
+    this.metaService.updateTag({ property: 'og:title', content: 'Explore Yoga Classes | Young Happy And Healthy' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Browse live and recorded online yoga classes tailored for every skill level, from beginners to advanced practitioners.' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://yoursite.com/assets/images/vinyasa-yoga.jpg' });
+    this.metaService.updateTag({ property: 'og:type', content: 'website' });
+
+    // 4. Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Online Yoga Classes & Workouts | Young Happy And Healthy' });
+    this.metaService.updateTag({ name: 'twitter:description', content: 'Discover live and on-demand yoga classes to improve flexibility, strength, and inner peace.' });
+  }
 }

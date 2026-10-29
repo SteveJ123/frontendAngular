@@ -20,6 +20,7 @@ export class BhagavatgitainpracticallifelistComponent {
   selectedMonth: string = ''; // Format: 'MM' (e.g. '10')
   selectedYear: string = '';  // Format: 'YYYY' (e.g. '2026')
   selectedStatus: string = ''; // Filter by 'paid' or 'pending'
+  selectedWhatsAppStatus: string = '';
 
   // Pagination states
   currentPage: number = 1;
@@ -32,19 +33,24 @@ export class BhagavatgitainpracticallifelistComponent {
 
   private cd = inject(ChangeDetectorRef);
 
-  constructor(private http: HttpClient) {}
+  selectedLanguage: string = '';
+
+  languages: string[] = ['English', 'Telugu', 'Hindi'];
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchUsers();
   }
   // http://localhost:3000
+  // https://apibhagavadhgitainpracticallife.younghappyandhealthy.com
   fetchUsers(): void {
     this.http.get<any>('https://apibhagavadhgitainpracticallife.younghappyandhealthy.com/api/users').subscribe({
       next: (response) => {
         console.log("response", response)
         if (response.success) {
           this.users = response.data;
-          
+
           // Calculate overall counts from full data
           this.totalUserCount = this.users.length;
           this.totalPaidUserCount = this.users.filter(u => u.payment_status === 'paid').length;
@@ -59,7 +65,7 @@ export class BhagavatgitainpracticallifelistComponent {
 
   // applyFilters(): void {
   //   let temp = [...this.users];
-    
+
   //   if (this.searchTerm.trim()) {
   //     const term = this.searchTerm.toLowerCase();
   //     temp = temp.filter(user => 
@@ -69,7 +75,7 @@ export class BhagavatgitainpracticallifelistComponent {
   //     );
   //     this.cd.detectChanges();
   //   }
-    
+
   //   if (this.selectedYear || this.selectedMonth) {
   //     temp = temp.filter(user => {
   //       const date = new Date(user.created_at);
@@ -94,7 +100,7 @@ export class BhagavatgitainpracticallifelistComponent {
     // 1. Search Filter (matches name, email, or mobile)
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
-      temp = temp.filter(user => 
+      temp = temp.filter(user =>
         user.fullName.toLowerCase().includes(term) ||
         user.email.toLowerCase().includes(term) ||
         user.whatsappNumber.includes(term)
@@ -104,6 +110,23 @@ export class BhagavatgitainpracticallifelistComponent {
     // 2. Status Filter (Paid vs Pending)
     if (this.selectedStatus) {
       temp = temp.filter(user => user.payment_status === this.selectedStatus);
+    }
+
+    // 3. WhatsApp Status Combination Filter
+    // if (this.selectedWhatsAppStatus === 'paid_joined') {
+    //   temp = temp.filter(user => user.payment_status === 'paid' && Boolean(user.whatsapp_joined));
+    // } else if (this.selectedWhatsAppStatus === 'paid_not_joined') {
+    //   temp = temp.filter(user => user.payment_status === 'paid' && !user.whatsapp_joined);
+    // }
+
+    if (this.selectedWhatsAppStatus === 'paid_joined') {
+      temp = temp.filter(user => user.payment_status === 'paid' && Boolean(user.whatsapp_joined));
+    } else if (this.selectedWhatsAppStatus === 'paid_not_joined') {
+      temp = temp.filter(user => user.payment_status === 'paid' && !user.whatsapp_joined);
+    } else if (this.selectedWhatsAppStatus === 'pending_joined') {
+      temp = temp.filter(user => user.payment_status === 'pending' && Boolean(user.whatsapp_joined));
+    } else if (this.selectedWhatsAppStatus === 'pending_not_joined') {
+      temp = temp.filter(user => user.payment_status === 'pending' && !user.whatsapp_joined);
     }
 
     // 3. Month & Year Filter based on created_at
@@ -118,6 +141,14 @@ export class BhagavatgitainpracticallifelistComponent {
 
         return matchesYear && matchesMonth;
       });
+    }
+
+    if (this.selectedLanguage) {
+      temp = temp.filter(
+        user =>
+          user.language?.toLowerCase() ===
+          this.selectedLanguage.toLowerCase()
+      );
     }
 
     this.filteredUsers = temp;
@@ -138,5 +169,41 @@ export class BhagavatgitainpracticallifelistComponent {
       this.currentPage = page;
       this.updatePagination();
     }
+  }
+
+  // Call this method when the checkbox changes
+  toggleWhatsAppStatus(user: any) {
+    // Toggle the boolean state locally first
+    const newStatus = !user.whatsapp_joined;
+    user.whatsapp_joined = newStatus;
+
+    // Send HTTP POST/PUT request to backend
+    this.http.post('https://apibhagavadhgitainpracticallife.younghappyandhealthy.com/api/whatsapp-joined', {
+      email: user.email,
+      whatsapp_joined: newStatus
+    }).subscribe({
+      next: (res: any) => {
+        console.log('WhatsApp status updated successfully:', res);
+      },
+      error: (err) => {
+        console.error('Failed to update status:', err);
+        // Revert UI state back if server request fails
+        user.whatsapp_joined = !newStatus;
+        alert('Could not update status. Please try again.');
+      }
+    });
+  }
+
+  onPageSizeChange(): void {
+    this.currentPage = 1; // Reset to first page when changing page size
+    this.updatePagination();
+  }
+
+  getPageArray(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 }
