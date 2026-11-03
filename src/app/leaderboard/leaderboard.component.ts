@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { Service } from "../shared/services/service";
 import { AuthService } from "../shared/services/AuthService";
 import { Router } from "@angular/router";
@@ -29,7 +29,7 @@ export class LeaderboardComponent {
   monthlyTopper: any = [];
   weeklyTopper: any = [];
   userType: any = "";
-  filteredUsers: any[] = [];
+  @Input() filteredUsers: any[] = [];
   activeTab: any = "alltime";
 
   ngOnInit(): void {
@@ -64,6 +64,32 @@ export class LeaderboardComponent {
     } else if (tab == "week") {
       this.filteredUsers = [...this.weeklyTopper];
       this.cd.detectChanges();
+    }
+  }
+
+  // @Input() filteredUsers: any[] = [];
+
+  // Limit initially set to 10
+  userLimit: number = 10;
+
+  // Filter out excluded usernames ('మంజుల' and 'admin') first
+  get displayableUsers(): any[] {
+    return (this.filteredUsers || []).filter(
+      (user) => user.username !== 'మంజుల' && user.username !== 'admin'
+    );
+  }
+
+  // Slice the filtered array based on current limit
+  get visibleUsers(): any[] {
+    return this.displayableUsers.slice(0, this.userLimit);
+  }
+
+  // Toggle limit between 10 and all users
+  toggleShowMore(): void {
+    if (this.userLimit >= this.displayableUsers.length) {
+      this.userLimit = 10; // Reset back to 10
+    } else {
+      this.userLimit = this.displayableUsers.length; // Show all
     }
   }
 }
