@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, inject } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef, inject, HostListener } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -100,12 +100,15 @@ export class DailyTracker implements OnInit {
   isLoadingTracker: boolean = false;
   id: any = "";
   dailyTrackerUsername: any = "";
+
+  private isInitialLoad = true; // Track startup
+
   ngOnInit(): void {
     this.locale =
       localStorage.getItem("language") === "English" ? "en-US" : "te";
     this.userId = Number(localStorage.getItem("userId")) || "";
     // this.fetchTrackerStatus();
-    this.id = Number(this.route.snapshot.paramMap.get("id"));
+    this.id = Number(this.route.snapshot.paramMap.get("id"));    
 
     if (this.id) {
       this.fetchTrackerStatus(this.id);
@@ -115,13 +118,13 @@ export class DailyTracker implements OnInit {
     } else {
       this.fetchTrackerStatus(this.userId);
     }
-  }
+  }  
 
   fetchTrackerStatus(id: any): void {
-    this.isLoadingTracker = true; // Show spinner
+    this.isLoadingTracker = true; // Show spinner    
     this.service.fetchTrackerUpdate(id).subscribe({
       next: (res: any) => {
-        if (res.message == "Daily practice already completed for today.") {
+        if (res.message == "Daily practice already completed for today.") {          
           this.isTodayCompleted = true;
           // this.generateEvent();
           this.isLoadingTracker = false; // Hide spinner
@@ -129,7 +132,7 @@ export class DailyTracker implements OnInit {
           console.log("this.completedDates", this.completedDates);
           this.generateCalendarEvents();
           this.cd.detectChanges();
-        } else {
+        } else {          
           this.completedDates = res.completedPracticeDates || [];
           // this.checkTodayStatus();
           this.generateCalendarEvents();

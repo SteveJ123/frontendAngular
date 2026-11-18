@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { ToastComponent } from "./shared/components/toast/ToastComponent";
 import { NavbarcomponentComponent } from "./shared/navbarcomponent/navbarcomponent.component";
 import { FooterComponent } from "./shared/footer/footer.component";
@@ -14,10 +14,24 @@ import { FooterComponent } from "./shared/footer/footer.component";
 export class AppComponent implements OnInit {
   title = "Angular Ecommerce Dashboard | TailAdmin";
 
+  constructor(private router: Router) {}
+
+  private handleStorageTamper = (event: StorageEvent) => {
+    if (event.key === 'token' || event.key === 'role' || event.key === null) {
+      localStorage.clear();
+      this.router.navigate(['/login']);
+    }
+  };
+
   ngOnInit(): void {
+    window.addEventListener('storage', this.handleStorageTamper);
     const savedDir = localStorage.getItem("dir");
     if (savedDir === "rtl") {
       document.documentElement.setAttribute("dir", "rtl");
     }
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('storage', this.handleStorageTamper);
   }
 }

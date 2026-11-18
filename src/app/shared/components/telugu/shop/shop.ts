@@ -60,8 +60,14 @@ export class Shop {
   }
   get currentRouteLanguage(): string {
     const urlSegments = this.router.url.split("/").filter(Boolean);
-    return urlSegments[0] === "te" ? "Telugu" : "English";
+    return urlSegments[0] === "en" ? "English" : "Telugu" ;
   }
+
+  get isEnglishOrDefaultRoute(): boolean {
+  const cleanUrl = this.router.url.split('?')[0].split('#')[0];
+  const firstSegment = cleanUrl.split('/').filter(Boolean)[0];
+  return !firstSegment || firstSegment === 'en' || (firstSegment !== 'te');
+}
 
   fetchProducts(): void {
     // this.http.get<any>(this.apiUrl)

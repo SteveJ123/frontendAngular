@@ -16,6 +16,7 @@ import { PriceComponent } from "./shared/price/price.component";
 import { GalleryComponent } from "./shared/gallery/gallery.component";
 import { ContactComponent } from "./shared/contact/contact.component";
 import { MainLayoutComponent } from "./shared/main-layout/main-layout.component";
+import { Shop } from "./shared/components/telugu/shop/shop";
 
 export const routes: Routes = [
   // { path: "", redirectTo: "", pathMatch: "full" },
@@ -34,7 +35,8 @@ export const routes: Routes = [
       { path: 'classes', component: ClassesComponent },
       { path: 'pricing', component: PriceComponent },
       { path: 'gallery', component: GalleryComponent },
-      { path: 'contact', component: ContactComponent }
+      { path: 'contact', component: ContactComponent },
+      { path: 'shop', component: Shop }
     ]
   },
 

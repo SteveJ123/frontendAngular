@@ -14,7 +14,7 @@ interface NavLink {
   templateUrl: './navbarcomponent.component.html',
 })
 export class NavbarcomponentComponent {
-isOpen = false;
+  isOpen = false;
 
   navLinks: NavLink[] = [
     { name: 'Home', path: '/' },
@@ -22,7 +22,8 @@ isOpen = false;
     { name: 'Classes', path: '/classes' },
     { name: 'Pricing', path: '/pricing' },
     { name: 'Gallery', path: '/gallery' },
-    { name: 'Contact', path: '/contact' }
+    { name: 'Contact', path: '/contact' },
+    { name: 'Shop', path: '/shop' }
   ];
 
   toggleMenu(): void {

@@ -305,7 +305,8 @@ export class Service {
   }
 
   fetchTrackerUpdate(userId: any) {
-    return this.http.get(`${this.apiUrl}tracker-status/${userId}`);
+    const timestamp = new Date().getTime();
+    return this.http.get(`${this.apiUrl}tracker-status/${userId}?_t=${timestamp}`);
   }
 
   MarkPracticeComplete(userId: any) {

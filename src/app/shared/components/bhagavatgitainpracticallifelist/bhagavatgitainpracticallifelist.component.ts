@@ -161,6 +161,7 @@ export class BhagavatgitainpracticallifelistComponent {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
+    console.log("this.paginatedUsers", this.paginatedUsers)
     this.cd.detectChanges();
   }
 

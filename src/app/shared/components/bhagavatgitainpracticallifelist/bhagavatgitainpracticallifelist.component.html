@@ -132,6 +132,8 @@
           <th scope="col" class="px-6 py-4">Email</th>
           <th scope="col" class="px-6 py-4">Mobile</th>
           <th scope="col" class="px-6 py-4">Language</th>
+          <th scope="col" class="px-6 py-4">Course Name</th>
+          <th scope="col" class="px-6 py-4">Amount</th>
           <th scope="col" class="px-6 py-4">Status</th>
           <th scope="col" class="px-6 py-4 text-center">WA Joined</th>
           <th scope="col" class="px-6 py-4">Registered Date</th>
@@ -146,6 +148,8 @@
           <td class="px-6 py-4">{{ user.email }}</td>
           <td class="px-6 py-4">{{ user.whatsappNumber }}</td>
           <td class="px-6 py-4">{{user.language}}</td>
+          <td class="px-6 py-4">{{user.coursename}}</td>
+          <td class="px-6 py-4">{{user.amount/100}}</td>
           <td class="px-6 py-4">
             <span [ngClass]="user.payment_status === 'paid' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'" class="px-2.5 py-0.5 rounded-full text-xs font-medium uppercase">
               {{ user.payment_status }}
